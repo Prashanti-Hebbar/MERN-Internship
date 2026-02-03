@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2 id="myid">javascript output statement</h2>
+    <script>
+        console.log("hello world");
+        document.write("welcome to javascript");
+        <!-- alert("this is an alert box"); -->
+        document.getElementById("myid").innerHTML = "this is javascript output statement using getElementById";
+    </script>
+
+    <p id="data"></p>
+    <button onclick="myfunction()">change</button>
+    <script>
+        function myfunction(){
+            document.getElementById("data").innerHTML = "you clicked the button";
+        }
+
+    </script>
+
+    <!-- datatypes -->
+     <script>
+        let num = 2;
+        var arr = [1, 2, 3, 4, 5];
+        const str = "hello";
+        let flag = true;
+        const obj = {name: "prashanti", age: 22};
+
+        //print all the above and generate resume
+
+     </script>
+<br>
+     <!-- varibales -->
+      <script>
+        var a = 10;
+        document.write(a);
+        a = 20;
+        document.write("<br>" + a);
+        
+      </script>
+
+      <script>
+        let age = 22
+        {
+            let age = 18
+        }
+        console.log(age);
+      </script>
+</body>
+</html>
