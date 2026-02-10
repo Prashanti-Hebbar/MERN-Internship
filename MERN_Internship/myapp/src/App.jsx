@@ -1,12 +1,17 @@
-import React from 'react'
-import FirstApp from './components/FirstApp';
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import FirstApp from "./components/FirstApp";
+import Register from "./components/MUI/Register";
 
-function App() {
+export default function App() {
   return (
-    <div>
-      <FirstApp />
-    </div>
-  )
+    <>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/FirstApp' element={<FirstApp />} />
+          <Route path='/' element={<Register />} />
+        </Routes>
+      </BrowserRouter>
+    </>
+  );
 }
-
-export default App;

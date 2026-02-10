@@ -1,0 +1,16 @@
+.myclass{
+    color:green;
+    text-align:center;
+    border:2px solid black;
+    padding:10px;
+    width:200px;
+    margin:0 auto;
+}
+
+.myimage{
+    display:block;
+    margin:20px auto;
+    width:200px;
+    height:auto;
+    padding:10px;    
+}
