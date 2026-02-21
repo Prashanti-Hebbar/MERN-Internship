@@ -11,6 +11,7 @@ const pages = [
     {name:"ARRAY METHOD", path:"/arraymethod"},
     {name:"DESTRUCTURING", path:"/destructuring"}
     
+    
 ];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
