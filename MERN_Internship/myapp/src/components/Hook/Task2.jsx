@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function ThemeToggle() {
+export default function ThemeToggle() {
   const [darkMode, setDarkMode] = useState(false);
 
   const containerStyle = {
@@ -39,4 +39,3 @@ function ThemeToggle() {
   );
 }
 
-export default ThemeToggle;

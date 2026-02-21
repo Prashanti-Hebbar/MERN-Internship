@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function Counter() {
+export default function Counter() {
   const [count, setCount] = useState(0);
 
   const containerStyle = {
@@ -57,4 +57,3 @@ function Counter() {
   );
 }
 
-export default Counter;
