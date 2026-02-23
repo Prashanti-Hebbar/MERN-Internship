@@ -15,7 +15,8 @@ import HookUseState from "./components/Hook/HookUseState";
 import MuiCard from "./components/MUI/MuiCard"
 import Task1 from "./components/Hook/Task1"
 import Task2 from "./components/Hook/Task2"
-
+import HookUseEffect from "./components/Hook/HookUseEffect"
+import ApiAxios from "./components/Hook/ApiAxios"
 
 export default function App() {
   return (
@@ -37,6 +38,8 @@ export default function App() {
           <Route path="MuiCard" element={<MuiCard />} />
           <Route path="Task1" element={<Task1 />} />
           <Route path="Task2" element={<Task2 />} />
+          <Route path="HookUseEffect" element={<HookUseEffect />} />
+          <Route path="ApiAxios" element={<ApiAxios />} />
 
           
         </Routes>

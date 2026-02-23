@@ -9,7 +9,9 @@ const pages = [
     {name:"SPREAD OPERATOR", path:"/spreadoperator"},
     {name:"ARROW FUNCTION", path:"/arrowfunction"},
     {name:"ARRAY METHOD", path:"/arraymethod"},
-    {name:"DESTRUCTURING", path:"/destructuring"}
+    {name:"DESTRUCTURING", path:"/destructuring"},
+    {name:"HOOKUSEEFFECT", path:"/hookuseeffect"},
+    {name:"APIAXIOS", path:"/apiaxios"}
     
     
 ];
