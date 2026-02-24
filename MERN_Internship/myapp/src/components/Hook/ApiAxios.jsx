@@ -1,6 +1,5 @@
 import React, {useState} from 'react'
 import axios from 'axios'
-import { response } from 'express'
 
 export default function ApiAxios() {
     const [data, setData] = useState([])
