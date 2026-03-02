@@ -1,53 +1,88 @@
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-
-function createData(name, email, password, phone, address) {
-  return { name, email, password, phone, address };
-}
-
-const rows = [
-  createData('User1', 'user1@gmail.com',' User1@123', 1234567890, 'Address1'),
-  createData('User2', 'user2@gmail.com',' User2@123', 1234567890, 'Address2'),
-  createData('User3', 'user3@gmail.com',' User3@123', 1234567890, 'Address3'),
-  createData('User4', 'user4@gmail.com',' User4@123', 1234567890, 'Address4'),
-  createData('User5', 'user5@gmail.com',' User5@123', 1234567890, 'Address5'),
-];
+import React, { useState, useEffect } from 'react'
+import {
+  Box, Typography, Paper, Table, TableBody, TableCell, TableContainer,
+  TableHead, TableRow, IconButton,
+} from '@mui/material'
+import DeleteIcon from '@mui/icons-material/Delete'
+import PersonIcon from '@mui/icons-material/Person'
 
 export default function Manageuser() {
+  const [users, setUsers] = useState([])
+
+  useEffect(() => {
+    const stored = JSON.parse(localStorage.getItem('userdetails')) || []
+    setUsers(stored)
+  }, [])
+
+  const handleDelete = (index) => {
+    const updated = users.filter((_, i) => i !== index)
+    setUsers(updated)
+    localStorage.setItem('userdetails', JSON.stringify(updated))
+  }
+
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell align="right">Email</TableCell>
-            <TableCell align="right">Password</TableCell>
-            <TableCell align="right">Phone</TableCell>
-            <TableCell align="right">Address</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow
-              key={row.name}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-              <TableCell component="th" scope="row">
-                {row.name}
-              </TableCell>
-              <TableCell align="right">{row.calories}</TableCell>
-              <TableCell align="right">{row.fat}</TableCell>
-              <TableCell align="right">{row.carbs}</TableCell>
-              <TableCell align="right">{row.protein}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
+    <Box>
+      <Typography variant="h4" fontWeight={700} mb={1}>
+        Manage Users
+      </Typography>
+      <Typography variant="body1" color="text.secondary" mb={4}>
+        View and manage all registered users.
+      </Typography>
+
+      <Paper elevation={0} sx={{
+        borderRadius: 3,
+        overflow: 'hidden',
+        background: 'rgba(255,255,255,0.9)',
+        backdropFilter: 'blur(10px)',
+        border: '1px solid rgba(0,0,0,0.05)',
+      }}>
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow sx={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
+                <TableCell sx={{ color: '#fff', fontWeight: 700 }}>#</TableCell>
+                <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Name</TableCell>
+                <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Email</TableCell>
+                <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Phone</TableCell>
+                <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Address</TableCell>
+                <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Password</TableCell>
+                <TableCell sx={{ color: '#fff', fontWeight: 700 }} align="center">Action</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {users.length > 0 ? users.map((user, index) => (
+                <TableRow key={index} sx={{
+                  '&:hover': { bgcolor: 'rgba(102,126,234,0.05)' },
+                  transition: 'background 0.2s',
+                }}>
+                  <TableCell>{index + 1}</TableCell>
+                  <TableCell>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <PersonIcon sx={{ color: '#667eea', fontSize: 20 }} />
+                      {user.name}
+                    </Box>
+                  </TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>{user.phone}</TableCell>
+                  <TableCell>{user.address}</TableCell>
+                  <TableCell>{user.password}</TableCell>
+                  <TableCell align="center">
+                    <IconButton color="error" onClick={() => handleDelete(index)} size="small">
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              )) : (
+                <TableRow>
+                  <TableCell colSpan={5} align="center" sx={{ py: 4 }}>
+                    <Typography color="text.secondary">No users found</Typography>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Paper>
+    </Box>
+  )
 }

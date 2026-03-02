@@ -3,6 +3,9 @@ import { Route, Routes } from "react-router-dom";
 import AHome from "../AComponents/AHome";
 import Sidebar from "../AComponents/Sidebar";
 import Manageuser from "../AComponents/Manageuser";
+import AddCategory from "../AComponents/AddCategory" 
+import AdminLogin from "../AComponents/AdminLogin";
+import ViewCategory from "../AComponents/ViewCategory";
 
 export default function AdminRoute() {
   return (
@@ -10,8 +13,11 @@ export default function AdminRoute() {
       <Sidebar />
       <>
         <Routes>
-          <Route path="/ahome" element={<AHome />} />
-          <Route path="/manageuser" element={<Manageuser />} />
+          <Route path="/dashboard" element={<AHome />} />
+          <Route path="/users" element={<Manageuser />} />
+          <Route path="/category/add" element={<AddCategory />} />
+          <Route path="/category/view" element={<ViewCategory />} />
+          <Route path="/login" element={<AdminLogin />} />
         </Routes>
       </>
     </div>

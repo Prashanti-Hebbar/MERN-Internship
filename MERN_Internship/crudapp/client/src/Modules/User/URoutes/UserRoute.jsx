@@ -3,7 +3,7 @@ import {Routes, Route} from 'react-router-dom'
 import UHome from '../UComponents/UHome'
 import Topbar from '../UComponents/Topbar'
 import AboutPage from '../UComponents/AboutPage'
-import HOmePage from '../UComponents/HomePage'
+import HomePage from '../UComponents/HomePage'
 
 export default function UserRoute() {
   return (
@@ -12,7 +12,7 @@ export default function UserRoute() {
       <Routes>
         <Route path='/uhome' element={<UHome />}/>
         <Route path='/about' element={<AboutPage />}/>
-        <Route path='/homepage' element={<HOmePage />}/>
+        <Route path='/homepage' element={<HomePage />}/>
       </Routes>
     </div>
   )
