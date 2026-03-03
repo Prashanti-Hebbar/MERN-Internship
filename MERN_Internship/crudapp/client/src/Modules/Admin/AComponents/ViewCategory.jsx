@@ -45,7 +45,7 @@ export default function ViewCategory() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {categories.length > 0 ? categories.map((cat, index) => (
+            1  {categories.length > 0 ? categories.map((cat, index) => (
                 <TableRow key={cat.id} sx={{
                   '&:hover': { bgcolor: 'rgba(102,126,234,0.05)' },
                   transition: 'background 0.2s',
