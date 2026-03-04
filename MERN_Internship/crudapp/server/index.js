@@ -1,5 +1,6 @@
 const express = require('express');
 const dbconnection = require('./db');
+
 // express is a web framework which is responsible to handle incoming request and send response to the client
 
 const app = express();
@@ -21,3 +22,6 @@ dbconnection();
 app.get('/apitest',(req, res)=>{
     res.send("API is working fine") // response text from server
 })
+
+app.use(express.json()) // we will use express.json() middleware to parse the incoming request body and make it available in req.body property of the request object.
+app.use('/user', require('./Routes/userRoutes')) // we will use app.use() method to define a route for our API endpoint and handle incoming requests to that endpoint and we will import the userRoutes.js file which contains the routes for our user API endpoints
