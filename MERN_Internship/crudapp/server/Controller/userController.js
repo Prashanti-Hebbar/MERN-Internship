@@ -1,6 +1,6 @@
 const userTable = require("../Models/userModel")
 
-const regiterUser = async(req, res) => {
+const registerUser = async(req, res) => {
     try {
         const{name,email,password,phone,address} = req.body
         const userDetails = new userTable({
@@ -22,4 +22,53 @@ const regiterUser = async(req, res) => {
     }
 }
 
-module.exports = regiterUser
+const getUser = async(req, res) => {
+    try {
+        const getAllUser = await userTable.find()
+        console.log(getAllUser)
+        res.status(200).json({message:"all user data", allusers:getAllUser})
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message:"server error", error})
+    }
+}
+
+const getUserById = async(req,res) => {
+    try {
+        const getUserId = req.params.id //params is used when we want to get a specific user by id 
+        const userById = await userTable.findById(getUserId)
+        console.log(userById)
+        res.status(200).json({message:"user data by id", user:userById})
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message:"server error", error})
+    }
+}
+
+const deleteUserById = async(req,res) => {
+    try{
+        const deleteUserId = req.params.id
+        const deleteUser = await userTable.findByIdAndDelete(deleteUserId)
+        console.log(deleteUser)
+        res.status(200).json({message:"user deleted successfully", user:deleteUser})
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message:"server error", error})
+    }
+}
+
+const updateUser = async(req, res)=>{
+    try{
+        const {id} = req.params
+        const body = req.body
+        const updatedUser = await userTable.findByIdAndUpdate(id,req.body, {returnDocument: 'after'})
+        console.log(updatedUser)
+        res.status(201).json({message:"User Updates Successfully", userupdate : updatedUser})
+    }catch(error){
+        console.error("Error updating users:", error)
+        res.status(500).json({message: "Server error", error})
+    }
+}
+
+module.exports = { registerUser, getUser, getUserById, deleteUserById, updateUser}
