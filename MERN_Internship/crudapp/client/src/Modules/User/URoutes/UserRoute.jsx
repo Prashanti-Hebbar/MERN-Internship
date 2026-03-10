@@ -4,6 +4,7 @@ import UHome from '../UComponents/UHome'
 import Topbar from '../UComponents/Topbar'
 import AboutPage from '../UComponents/AboutPage'
 import HomePage from '../UComponents/HomePage'
+import Register from '../UComponents/Register'
 
 export default function UserRoute() {
   return (
@@ -13,6 +14,7 @@ export default function UserRoute() {
         <Route path='/uhome' element={<UHome />}/>
         <Route path='/about' element={<AboutPage />}/>
         <Route path='/homepage' element={<HomePage />}/>
+        <Route path='/' element={<Register />}/> 
       </Routes>
     </div>
   )

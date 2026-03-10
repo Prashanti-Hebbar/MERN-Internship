@@ -1,5 +1,6 @@
 const express = require('express');
 const dbconnection = require('./db');
+const cors = require('cors');
 
 // express is a web framework which is responsible to handle incoming request and send response to the client
 
@@ -23,5 +24,6 @@ app.get('/apitest',(req, res)=>{
     res.send("API is working fine") // response text from server
 })
 
+app.use(cors()) // we will use cors middleware to enable cross-origin resource sharing and allow our client application to make requests to our server from a different origin and we will import the cors package which is a middleware that allows us to enable CORS in our express application
 app.use(express.json()) // we will use express.json() middleware to parse the incoming request body and make it available in req.body property of the request object.
 app.use('/user', require('./Routes/userRoutes')) // we will use app.use() method to define a route for our API endpoint and handle incoming requests to that endpoint and we will import the userRoutes.js file which contains the routes for our user API endpoints

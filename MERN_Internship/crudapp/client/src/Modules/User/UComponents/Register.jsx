@@ -1,101 +1,151 @@
-import React, { useState, useEffect } from "react";
-import {Typography, Paper, TextField, Button, Checkbox, FormControlLabel, Box} from "@mui/material";
-import img1 from "./img1.jpg";
-import img3 from "./img3.jpg";
+import React, { useState } from "react";
+import {
+  Typography,
+  Paper,
+  TextField,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  Box,
+} from "@mui/material";
+import axios from "axios";
 
 export default function Register() {
-  const [formdata, setFormdata] = useState({ name: "", email: "", password: "", phone: "", address: "", });
-
-  const images = [img1, img3];
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  // Slide every 3 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % images.length);
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [images.length]);
+  const [formdata, setFormdata] = useState({
+    name: "",
+    email: "",
+    password: "",
+    phone: "",
+    address: "",
+  });
 
   const handleChange = (e) => {
     setFormdata({ ...formdata, [e.target.name]: e.target.value });
   };
 
   const handleregister = () => {
-    const existinguser =
-      JSON.parse(localStorage.getItem("userdetails")) || [];
-    const allusers = [...existinguser, formdata];
-    localStorage.setItem("userdetails", JSON.stringify(allusers));
-    alert("Registration successful!");
-    window.location.href = '/homepage';
+    console.log("Form data:", formdata);
+
+    axios
+      .post("http://localhost:3000/user/registerUser", formdata)
+      .then((res) => {
+        console.log("registered user :", res.data.u);
+        alert("Registration successful!");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
-    <Box sx={{ height: "100vh", display: "flex", backgroundColor: "#f2f2f2", alignItems: "center", justifyContent: "center", }} >
-      <Paper elevation={6} sx={{ width: "1100px", height: "700px", display: "flex", borderRadius: 3, overflow: "hidden", }} >
-        
-        {/* LEFT IMAGE SLIDER */}
-        <Box sx={{ flex: 1, position: "relative" }}>
-          <img
-            src={images[currentIndex]}
-            alt="slide"
-            style={{ width: "100%", height: "100%", objectFit: "cover", transition: "opacity 0.5s ease-in-out", }}
-          />
-        </Box>
+    <Box
+      sx={{
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        background: "linear-gradient(135deg,#1e3c72,#2a5298)",
+      }}
+    >
+      <Paper
+        elevation={10}
+        sx={{
+          width: "420px",
+          padding: 5,
+          borderRadius: 4,
+        }}
+      >
+        <Typography
+          variant="h4"
+          fontWeight={700}
+          textAlign="center"
+          mb={3}
+        >
+          Registration
+        </Typography>
 
-        {/* RIGHT FORM */}
-        <Box sx={{ flex: 1, padding: 6, display: "flex", flexDirection: "column", justifyContent: "center", }} >
-          <Typography variant="h4" mb={3} fontWeight={600} textAlign="center" >
-            Registration
-          </Typography>
+        <TextField
+          label="Full Name"
+          name="name"
+          fullWidth
+          margin="normal"
+          onChange={handleChange}
+        />
 
-          <TextField label="Name" name="name" fullWidth margin="normal" onChange={handleChange} />
-          <TextField label="Email" name="email" fullWidth margin="normal" onChange={handleChange} />
-          <TextField label="Password" name="password" type="password" fullWidth margin="normal" onChange={handleChange} />
-          <TextField label="Phone Number" name="phone" fullWidth margin="normal" onChange={handleChange} />
-          <TextField label="Address" name="address" fullWidth margin="normal" onChange={handleChange} />
+        <TextField
+          label="Email"
+          name="email"
+          fullWidth
+          margin="normal"
+          onChange={handleChange}
+        />
 
-          <FormControlLabel
-            control={<Checkbox />}
-            label={
-              <Typography variant="body2">
-                I agree to the{" "}
-                <span style={{ color: "#1976d2" }}>
-                  terms and conditions
-                </span>
-              </Typography>
-            }
-          />
+        <TextField
+          label="Password"
+          name="password"
+          type="password"
+          fullWidth
+          margin="normal"
+          onChange={handleChange}
+        />
 
-          <Button
-            variant="contained"
-            fullWidth
-            sx={{
-              mt: 2,
-              py: 1.2,
-              backgroundColor: "#1c1c1c",
-              "&:hover": { backgroundColor: "#000" },
+        <TextField
+          label="Phone Number"
+          name="phone"
+          fullWidth
+          margin="normal"
+          onChange={handleChange}
+        />
+
+        <TextField
+          label="Address"
+          name="address"
+          fullWidth
+          margin="normal"
+          onChange={handleChange}
+        />
+
+        {/* <FormControlLabel
+          control={<Checkbox />}
+          label={
+            <Typography variant="body2">
+              I agree to the{" "}
+              <span style={{ color: "#1976d2", fontWeight: 500 }}>
+                terms and conditions
+              </span>
+            </Typography>
+          }
+        /> */}
+
+        <Button
+          variant="contained"
+          fullWidth
+          sx={{
+            mt: 2,
+            py: 1.3,
+            borderRadius: 2,
+            fontSize: "16px",
+            background: "#1c1c1c",
+            "&:hover": { background: "#000" },
+          }}
+          onClick={handleregister}
+        >
+          Register
+        </Button>
+
+        <Typography variant="body2" textAlign="center" sx={{ mt: 3 }}>
+          Already have an account?{" "}
+          <span
+            style={{
+              color: "#1976d2",
+              cursor: "pointer",
+              fontWeight: 500,
             }}
-            onClick={handleregister}
+            onClick={() => (window.location.href = "/login")}
           >
-            Sign up
-          </Button>
-
-          <Typography variant="body2" textAlign="center" sx={{ mt: 3 }}>
-            Already have an account?{" "}
-            <span
-              style={{
-                color: "#1976d2",
-                cursor: "pointer",
-                fontWeight: 500,
-              }}
-              onClick={() => window.location.href = '/login'}
-            >
-              Login
-            </span>
-          </Typography>
-        </Box>
+            Login
+          </span>
+        </Typography>
       </Paper>
     </Box>
   );
