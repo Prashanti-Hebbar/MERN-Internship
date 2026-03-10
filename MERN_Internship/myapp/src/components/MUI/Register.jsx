@@ -19,11 +19,12 @@ export default function Register() {
   };
 
   const handleRegister = () => {
-    const existingusers = JSON.parse(localStorage.getItem("userdetails")) || [];
-    console.log(existingusers);
-    const allusers = [...existingusers, formdata]
-    localStorage.setItem("userdetails", JSON.stringify(allusers));
-    alert('registered successfully!')
+    // const existingusers = JSON.parse(localStorage.getItem("userdetails")) || [];
+    // console.log(existingusers);
+    // const allusers = [...existingusers, formdata]
+    // localStorage.setItem("userdetails", JSON.stringify(allusers));
+    // alert('registered successfully!')
+    console.log("form data :", formdata)
   };
 
   // const handleRegister = (e) => {
