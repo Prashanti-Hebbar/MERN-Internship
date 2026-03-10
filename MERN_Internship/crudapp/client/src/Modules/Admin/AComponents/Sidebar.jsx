@@ -13,12 +13,18 @@ import LogoutIcon from '@mui/icons-material/Logout'
 import ExpandLess from '@mui/icons-material/ExpandLess'
 import ExpandMore from '@mui/icons-material/ExpandMore'
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings'
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 
 const drawerWidth = 260
 
 const menuItems = [
   { text: 'Dashboard', icon: <DashboardIcon />, path: '/admin/dashboard' },
   { text: 'Users', icon: <PeopleIcon />, path: '/admin/users' },
+]
+
+const productItems = [
+  { text: 'Add Product', icon: <AddCircleIcon />, path: '/admin/products/add' },
+  { text: 'View Products', icon: <ViewListIcon />, path: '/admin/products' },
 ]
 
 const categoryItems = [
@@ -30,6 +36,7 @@ export default function Sidebar() {
   const location = useLocation()
   const navigate = useNavigate()
   const [categoryOpen, setCategoryOpen] = useState(false)
+  const [productOpen, setProductOpen] = useState(false)
 
   const handleLogout = () => {
     localStorage.removeItem('adminLoggedIn')
@@ -38,6 +45,7 @@ export default function Sidebar() {
 
   const isActive = (path) => location.pathname === path
   const isCategoryActive = categoryItems.some((item) => location.pathname === item.path)
+  const isProductActive = productItems.some((item) => location.pathname === item.path)
 
   return (
     <Drawer
@@ -48,130 +56,132 @@ export default function Sidebar() {
         '& .MuiDrawer-paper': {
           width: drawerWidth,
           boxSizing: 'border-box',
-          background: 'linear-gradient(195deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
           color: '#fff',
-          borderRight: 'none',
         },
       }}
     >
-      {/* Logo / Brand */}
-      <Box sx={{ p: 3, textAlign: 'center' }}>
-        <Avatar sx={{
-          m: 'auto', mb: 1, width: 60, height: 60,
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        }}>
-          <AdminPanelSettingsIcon sx={{ fontSize: 32 }} />
+      <Box sx={{ p: 2, textAlign: 'center' }}>
+        <Avatar sx={{ width: 60, height: 60, mx: 'auto', mb: 1, bgcolor: '#fff', color: '#667eea' }}>
+          <AdminPanelSettingsIcon sx={{ fontSize: 30 }} />
         </Avatar>
-        <Typography variant="h6" fontWeight={700}>Admin Panel</Typography>
-        <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.6)' }}>
-          Management Dashboard
+        <Typography variant="h6" fontWeight={700}>
+          Admin Panel
         </Typography>
       </Box>
 
-      <Divider sx={{ borderColor: 'rgba(255,255,255,0.1)' }} />
+      <Divider sx={{ bgcolor: 'rgba(255,255,255,0.2)' }} />
 
-      {/* Nav Items */}
-      <List sx={{ px: 1, mt: 1 }}>
+      <List>
         {menuItems.map((item) => (
-          <ListItem key={item.text} disablePadding sx={{ mb: 0.5 }}>
+          <ListItem key={item.text} disablePadding>
             <ListItemButton
-              component={Link} to={item.path}
+              component={Link}
+              to={item.path}
               sx={{
-                borderRadius: 2, mx: 1,
-                bgcolor: isActive(item.path) ? 'rgba(102,126,234,0.3)' : 'transparent',
-                '&:hover': { bgcolor: 'rgba(102,126,234,0.2)' },
+                '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' },
+                bgcolor: isActive(item.path) ? 'rgba(255,255,255,0.2)' : 'transparent',
               }}
             >
-              <ListItemIcon sx={{
-                color: isActive(item.path) ? '#667eea' : 'rgba(255,255,255,0.7)',
-                minWidth: 40,
-              }}>
+              <ListItemIcon sx={{ color: '#fff' }}>
                 {item.icon}
               </ListItemIcon>
-              <ListItemText
-                primary={item.text}
-                primaryTypographyProps={{
-                  fontSize: '0.9rem',
-                  fontWeight: isActive(item.path) ? 600 : 400,
-                }}
-              />
+              <ListItemText primary={item.text} />
             </ListItemButton>
           </ListItem>
         ))}
 
-        {/* Category with submenu */}
-        <ListItem disablePadding sx={{ mb: 0.5 }}>
+        <ListItem disablePadding>
           <ListItemButton
-            onClick={() => setCategoryOpen(!categoryOpen)}
+            onClick={() => setProductOpen(!productOpen)}
             sx={{
-              borderRadius: 2, mx: 1,
-              bgcolor: isCategoryActive ? 'rgba(102,126,234,0.15)' : 'transparent',
-              '&:hover': { bgcolor: 'rgba(102,126,234,0.2)' },
+              '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' },
+              bgcolor: isProductActive ? 'rgba(255,255,255,0.2)' : 'transparent',
             }}
           >
-            <ListItemIcon sx={{
-              color: isCategoryActive ? '#667eea' : 'rgba(255,255,255,0.7)',
-              minWidth: 40,
-            }}>
-              <CategoryIcon />
+            <ListItemIcon sx={{ color: '#fff' }}>
+              <ShoppingCartIcon />
             </ListItemIcon>
-            <ListItemText primary="Category" primaryTypographyProps={{ fontSize: '0.9rem' }} />
-            {categoryOpen ? <ExpandLess /> : <ExpandMore />}
+            <ListItemText primary="Products" />
+            {productOpen ? <ExpandLess /> : <ExpandMore />}
           </ListItemButton>
         </ListItem>
 
-        <Collapse in={categoryOpen} timeout="auto" unmountOnExit>
-          <List disablePadding>
-            {categoryItems.map((item) => (
-              <ListItem key={item.text} disablePadding sx={{ mb: 0.5 }}>
+        <Collapse in={productOpen} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            {productItems.map((item) => (
+              <ListItem key={item.text} disablePadding>
                 <ListItemButton
-                  component={Link} to={item.path}
+                  component={Link}
+                  to={item.path}
                   sx={{
-                    borderRadius: 2, mx: 1, pl: 4,
-                    bgcolor: isActive(item.path) ? 'rgba(102,126,234,0.3)' : 'transparent',
-                    '&:hover': { bgcolor: 'rgba(102,126,234,0.2)' },
+                    pl: 4,
+                    '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' },
+                    bgcolor: isActive(item.path) ? 'rgba(255,255,255,0.2)' : 'transparent',
                   }}
                 >
-                  <ListItemIcon sx={{
-                    color: isActive(item.path) ? '#667eea' : 'rgba(255,255,255,0.5)',
-                    minWidth: 36,
-                  }}>
+                  <ListItemIcon sx={{ color: '#fff' }}>
                     {item.icon}
                   </ListItemIcon>
-                  <ListItemText
-                    primary={item.text}
-                    primaryTypographyProps={{
-                      fontSize: '0.85rem',
-                      fontWeight: isActive(item.path) ? 600 : 400,
-                    }}
-                  />
+                  <ListItemText primary={item.text} />
                 </ListItemButton>
               </ListItem>
             ))}
           </List>
         </Collapse>
-      </List>
 
-      <Box sx={{ flexGrow: 1 }} />
+        <ListItem disablePadding>
+          <ListItemButton
+            onClick={() => setCategoryOpen(!categoryOpen)}
+            sx={{
+              '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' },
+              bgcolor: isCategoryActive ? 'rgba(255,255,255,0.2)' : 'transparent',
+            }}
+          >
+            <ListItemIcon sx={{ color: '#fff' }}>
+              <CategoryIcon />
+            </ListItemIcon>
+            <ListItemText primary="Category" />
+            {categoryOpen ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+        </ListItem>
 
-      {/* Logout */}
-      <Divider sx={{ borderColor: 'rgba(255,255,255,0.1)' }} />
-      <List sx={{ px: 1, pb: 2 }}>
+        <Collapse in={categoryOpen} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            {categoryItems.map((item) => (
+              <ListItem key={item.text} disablePadding>
+                <ListItemButton
+                  component={Link}
+                  to={item.path}
+                  sx={{
+                    pl: 4,
+                    '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' },
+                    bgcolor: isActive(item.path) ? 'rgba(255,255,255,0.2)' : 'transparent',
+                  }}
+                >
+                  <ListItemIcon sx={{ color: '#fff' }}>
+                    {item.icon}
+                  </ListItemIcon>
+                  <ListItemText primary={item.text} />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+        </Collapse>
+
+        <Divider sx={{ bgcolor: 'rgba(255,255,255,0.2)', my: 1 }} />
+
         <ListItem disablePadding>
           <ListItemButton
             onClick={handleLogout}
             sx={{
-              borderRadius: 2, mx: 1,
-              '&:hover': { bgcolor: 'rgba(255,82,82,0.2)' },
+              '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' },
             }}
           >
-            <ListItemIcon sx={{ color: '#ff5252', minWidth: 40 }}>
+            <ListItemIcon sx={{ color: '#fff' }}>
               <LogoutIcon />
             </ListItemIcon>
-            <ListItemText
-              primary="Logout"
-              primaryTypographyProps={{ fontSize: '0.9rem', color: '#ff5252' }}
-            />
+            <ListItemText primary="Logout" />
           </ListItemButton>
         </ListItem>
       </List>
