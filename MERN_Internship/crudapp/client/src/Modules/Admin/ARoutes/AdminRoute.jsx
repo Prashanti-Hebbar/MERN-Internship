@@ -10,6 +10,7 @@ import ViewCategory from "../AComponents/ViewCategory";
 import ManageProducts from "../AComponents/ManageProducts";
 import AddProduct from "../AComponents/AddProduct";
 import ViewProduct from "../AComponents/ViewProduct";
+import ViewUser from "../AComponents/ViewUser";
 
 export default function AdminRoute() {
   return (
@@ -24,6 +25,7 @@ export default function AdminRoute() {
           <Route path="/category/add" element={<AddCategory />} />
           <Route path="/category/view" element={<ViewCategory />} />
           <Route path="/login" element={<AdminLogin />} />
+          <Route path="/ViewUser" element={<ViewUser />} />
         </Routes>
       </Box>
     </Box>
