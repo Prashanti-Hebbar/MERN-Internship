@@ -6,299 +6,322 @@ import {
   Paper,
   Button,
   TextField,
+  MenuItem,
+  Chip,
   IconButton,
-  LinearProgress,
 } from "@mui/material";
+import MovieIcon from "@mui/icons-material/Movie";
 import DeleteIcon from "@mui/icons-material/Delete";
-import AddIcon from "@mui/icons-material/Add";
-import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
-export default function Dashboard() {
-  const [habit, setHabit] = useState("");
-  const [habits, setHabits] = useState(
-    JSON.parse(localStorage.getItem("streaklyHabits")) || []
+const genres = [
+  "Action",
+  "Drama",
+  "Comedy",
+  "Thriller",
+  "Romance",
+  "Sci-Fi",
+  "Animation",
+];
+
+export default function MovieWatchlist() {
+  const [title, setTitle] = useState("");
+  const [year, setYear] = useState("");
+  const [genre, setGenre] = useState("");
+  const [filter, setFilter] = useState("all");
+
+  const [movies, setMovies] = useState(
+    JSON.parse(localStorage.getItem("movieWatchlist")) || []
   );
 
   useEffect(() => {
-    localStorage.setItem("streaklyHabits", JSON.stringify(habits));
-  }, [habits]);
+    localStorage.setItem("movieWatchlist", JSON.stringify(movies));
+  }, [movies]);
 
-  const addHabit = () => {
-    if (!habit.trim()) return;
+  const addMovie = () => {
+    if (!title.trim()) return;
 
-    const newHabit = {
+    const newMovie = {
       id: Date.now(),
-      name: habit,
-      streak: 0,
-      completedToday: false,
+      title: title.trim(),
+      year: year.trim(),
+      genre: genre || "Unknown",
+      watched: false,
     };
 
-    setHabits([...habits, newHabit]);
-    setHabit("");
+    setMovies([newMovie, ...movies]);
+    setTitle("");
+    setYear("");
+    setGenre("");
   };
 
-  const toggleComplete = (id) => {
-    setHabits(
-      habits.map((h) =>
-        h.id === id
-          ? {
-              ...h,
-              completedToday: !h.completedToday,
-              streak: h.completedToday ? h.streak : h.streak + 1,
-            }
-          : h
+  const toggleWatched = (id) => {
+    setMovies(
+      movies.map((m) =>
+        m.id === id ? { ...m, watched: !m.watched } : m
       )
     );
   };
 
-  const deleteHabit = (id) => {
-    setHabits(habits.filter((h) => h.id !== id));
+  const deleteMovie = (id) => {
+    setMovies(movies.filter((m) => m.id !== id));
   };
 
-  const completedCount = habits.filter((h) => h.completedToday).length;
-  const bestStreak =
-    habits.length > 0 ? Math.max(...habits.map((h) => h.streak)) : 0;
+  const filteredMovies = movies.filter((m) => {
+    if (filter === "watched") return m.watched;
+    if (filter === "unwatched") return !m.watched;
+    return true;
+  });
+
+  const watchedCount = movies.filter((m) => m.watched).length;
+  const totalCount = movies.length;
 
   return (
-  <Box
-    sx={{
-      minHeight: "100vh",
-      background:
-        "linear-gradient(-45deg,#0f2027,#1e3c72,#2a5298,#203a43)",
-      backgroundSize: "400% 400%",
-      animation: "gradientMove 15s ease infinite",
-      px: { xs: 2, md: 6 },
-      py: 5,
-      position: "relative",
-      overflow: "hidden",
-    }}
-  >
-    {/* Floating Glow Effects */}
-    <Box className="glow glow1" />
-    <Box className="glow glow2" />
-
-    {/* Header */}
-    <Box mb={5}>
-      <Typography
-        variant="h3"
-        fontWeight="bold"
-        color="white"
-        sx={{ letterSpacing: 1 }}
-      >
-        🔥 Streakly
-      </Typography>
-      <Typography color="rgba(255,255,255,0.7)">
-        Stay consistent. Build powerful habits daily.
-      </Typography>
-    </Box>
-
-    {/* Add Habit Section */}
-    <Paper
+    <Box
       sx={{
-        p: 4,
-        mb: 5,
-        borderRadius: 5,
-        background:
-          "linear-gradient(135deg,rgba(255,255,255,0.15),rgba(255,255,255,0.05))",
-        backdropFilter: "blur(20px)",
-        boxShadow: "0 10px 40px rgba(0,0,0,0.4)",
+        minHeight: "100vh",
+        background: "linear-gradient(135deg, #0f2027, #2c5364)",
+        px: { xs: 2, md: 6 },
+        py: 5,
+        color: "#fff",
       }}
     >
-      <Typography color="white" mb={3} fontWeight={600}>
-        Add New Habit
-      </Typography>
+      <Box mb={5}>
+        <Typography variant="h3" fontWeight="bold" sx={{ letterSpacing: 1 }}>
+          🎬 Movie Watchlist
+        </Typography>
+        <Typography sx={{ opacity: 0.8 }}>
+          Track what you want to watch next and mark movies as watched.
+        </Typography>
+      </Box>
 
-      <Box
+      <Paper
         sx={{
-          display: "flex",
-          flexDirection: { xs: "column", sm: "row" },
-          gap: 2,
+          p: 4,
+          mb: 5,
+          borderRadius: 4,
+          background: "rgba(255,255,255,0.08)",
+          backdropFilter: "blur(12px)",
+          border: "1px solid rgba(255,255,255,0.2)",
         }}
       >
-        <TextField
-          fullWidth
-          value={habit}
-          onChange={(e) => setHabit(e.target.value)}
-          placeholder="Enter habit..."
-          sx={{
-            input: { color: "white" },
-            fieldset: { borderColor: "rgba(255,255,255,0.4)" },
-          }}
-        />
+        <Typography mb={2} fontWeight={700} color="white">
+          Add a Movie
+        </Typography>
 
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={addHabit}
-          sx={{
-            background:
-              "linear-gradient(135deg,#00c6ff,#0072ff)",
-            px: 4,
-            boxShadow: "0 6px 20px rgba(0,114,255,0.5)",
-            "&:hover": {
-              transform: "scale(1.05)",
-            },
-          }}
-        >
-          Add Habit
-        </Button>
-      </Box>
-    </Paper>
-
-    {/* Stats Section */}
-    <Grid container spacing={3} mb={5}>
-      {[
-        { label: "Total Habits", value: habits.length },
-        { label: "Completed Today", value: completedCount },
-        { label: "Best Streak", value: bestStreak },
-      ].map((stat, index) => (
-        <Grid item xs={12} sm={4} key={index}>
-          <Paper
-            sx={{
-              p: 4,
-              borderRadius: 5,
-              textAlign: "center",
-              background:
-                "linear-gradient(135deg,rgba(255,255,255,0.15),rgba(255,255,255,0.05))",
-              backdropFilter: "blur(20px)",
-              color: "white",
-              transition: "0.4s",
-              "&:hover": {
-                transform: "translateY(-10px) scale(1.02)",
-              },
-            }}
-          >
-            <Typography sx={{ opacity: 0.8 }}>
-              {stat.label}
-            </Typography>
-            <Typography variant="h3" fontWeight="bold" mt={1}>
-              {stat.value}
-            </Typography>
-          </Paper>
-        </Grid>
-      ))}
-    </Grid>
-
-    {/* Habit Cards */}
-    <Grid container spacing={3}>
-      {habits.map((h) => (
-        <Grid item xs={12} sm={6} md={4} key={h.id}>
-          <Paper
-            sx={{
-              p: 4,
-              borderRadius: 5,
-              background:
-                "linear-gradient(135deg,rgba(255,255,255,0.15),rgba(255,255,255,0.05))",
-              backdropFilter: "blur(20px)",
-              color: "white",
-              transition: "0.4s",
-              boxShadow: "0 8px 30px rgba(0,0,0,0.4)",
-              "&:hover": {
-                transform: "scale(1.05)",
-              },
-            }}
-          >
-            <Box
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={4}>
+            <TextField
+              fullWidth
+              label="Movie Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              InputLabelProps={{ style: { color: "rgba(255,255,255,0.7)" } }}
               sx={{
-                display: "flex",
-                justifyContent: "space-between",
-              }}
-            >
-              <Typography fontWeight={600}>
-                {h.name}
-              </Typography>
-
-              <IconButton onClick={() => deleteHabit(h.id)}>
-                <DeleteIcon sx={{ color: "white" }} />
-              </IconButton>
-            </Box>
-
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                mt: 2,
-              }}
-            >
-              <LocalFireDepartmentIcon
-                sx={{ color: "#ff9800" }}
-              />
-              <Typography ml={1}>
-                {h.streak} Day Streak
-              </Typography>
-            </Box>
-
-            <LinearProgress
-              variant="determinate"
-              value={(h.streak % 10) * 10}
-              sx={{
-                mt: 2,
-                height: 8,
-                borderRadius: 5,
-                backgroundColor:
-                  "rgba(255,255,255,0.2)",
+                '& .MuiInputBase-input': { color: 'white' },
+                fieldset: { borderColor: "rgba(255,255,255,0.4)" },
+                '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
+                  borderColor: "rgba(255,255,255,0.6)",
+                },
+                '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: "#00bcd4",
+                },
               }}
             />
+          </Grid>
 
+          <Grid item xs={12} md={2}>
+            <TextField
+              fullWidth
+              label="Year"
+              value={year}
+              onChange={(e) => setYear(e.target.value)}
+              InputLabelProps={{ style: { color: "rgba(255,255,255,0.7)" } }}
+              sx={{
+                '& .MuiInputBase-input': { color: 'white' },
+                fieldset: { borderColor: "rgba(255,255,255,0.4)" },
+                '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
+                  borderColor: "rgba(255,255,255,0.6)",
+                },
+                '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: "#00bcd4",
+                },
+              }}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={3}>
+            <TextField
+              select
+              fullWidth
+              label="Genre"
+              value={genre}
+              onChange={(e) => setGenre(e.target.value)}
+              InputLabelProps={{ style: { color: "rgba(255,255,255,0.7)" } }}
+              sx={{
+                '& .MuiInputBase-input': { color: 'white' },
+                fieldset: { borderColor: "rgba(255,255,255,0.4)" },
+                '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
+                  borderColor: "rgba(255,255,255,0.6)",
+                },
+                '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: "#00bcd4",
+                },
+                '& .MuiSelect-icon': { color: "rgba(255,255,255,0.7)" },
+              }}
+            >
+              <MenuItem value="">Select genre</MenuItem>
+              {genres.map((g) => (
+                <MenuItem key={g} value={g} sx={{ color: "black" }}>
+                  {g}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+
+          <Grid item xs={12} md={3}>
             <Button
               fullWidth
-              sx={{
-                mt: 3,
-                background: h.completedToday
-                  ? "linear-gradient(135deg,#4caf50,#2e7d32)"
-                  : "linear-gradient(135deg,#00c6ff,#0072ff)",
-              }}
               variant="contained"
-              onClick={() => toggleComplete(h.id)}
+              color="secondary"
+              onClick={addMovie}
+              sx={{ height: "100%" }}
             >
-              {h.completedToday
-                ? "Completed ✔"
-                : "Mark Done"}
+              Add to Watchlist
             </Button>
-          </Paper>
+          </Grid>
         </Grid>
-      ))}
-    </Grid>
+      </Paper>
 
-    {/* Animations */}
-    <style>
-      {`
-        @keyframes gradientMove {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
+      <Paper
+        sx={{
+          p: 4,
+          mb: 5,
+          borderRadius: 4,
+          background: "rgba(255,255,255,0.08)",
+          backdropFilter: "blur(12px)",
+          border: "1px solid rgba(255,255,255,0.2)",
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: 2,
+          }}
+        >
+          <Box>
+            <Typography variant="h6" color="white">Your Summary</Typography>
+            <Typography sx={{ opacity: 0.75 }} color="white">
+              {totalCount} movies total · {watchedCount} watched
+            </Typography>
+          </Box>
 
-        .glow {
-          position: absolute;
-          border-radius: 50%;
-          background: rgba(255,255,255,0.08);
-          filter: blur(80px);
-          animation: float 10s infinite ease-in-out;
-        }
+          <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+            {[
+              { label: "All", value: "all" },
+              { label: "To Watch", value: "unwatched" },
+              { label: "Watched", value: "watched" },
+            ].map((tab) => (
+              <Chip
+                key={tab.value}
+                label={tab.label}
+                clickable
+                onClick={() => setFilter(tab.value)}
+                color={filter === tab.value ? "secondary" : "default"}
+              />
+            ))}
+          </Box>
+        </Box>
+      </Paper>
 
-        .glow1 {
-          width: 300px;
-          height: 300px;
-          top: -100px;
-          left: -100px;
-        }
+      <Grid container spacing={3}>
+        {filteredMovies.length === 0 ? (
+          <Grid item xs={12}>
+            <Paper
+              sx={{
+                p: 5,
+                textAlign: "center",
+                borderRadius: 4,
+                background: "rgba(255,255,255,0.05)",
+              }}
+            >
+              <Typography variant="h6" sx={{ opacity: 0.8 }} color="white">
+                Your watchlist is empty.
+              </Typography>
+              <Typography sx={{ opacity: 0.6 }} color="white">
+                Add a movie to start tracking what to watch next.
+              </Typography>
+            </Paper>
+          </Grid>
+        ) : (
+          filteredMovies.map((movie) => (
+            <Grid item xs={12} sm={6} md={4} key={movie.id}>
+              <Paper
+                sx={{
+                  p: 3,
+                  borderRadius: 4,
+                  background: "rgba(255,255,255,0.08)",
+                  backdropFilter: "blur(12px)",
+                  border: "1px solid rgba(255,255,255,0.15)",
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    mb: 1,
+                  }}
+                >
+                  <Typography fontWeight={700}>{movie.title}</Typography>
+                  <IconButton
+                    size="small"
+                    onClick={() => deleteMovie(movie.id)}
+                    sx={{ color: "rgba(255,255,255,0.7)" }}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </Box>
 
-        .glow2 {
-          width: 250px;
-          height: 250px;
-          bottom: -100px;
-          right: -100px;
-          animation-delay: 3s;
-        }
+                <Typography sx={{ opacity: 0.7 }}>
+                  {movie.genre} • {movie.year || "Unknown"}
+                </Typography>
 
-        @keyframes float {
-          0% { transform: translateY(0px); }
-          50% { transform: translateY(-40px); }
-          100% { transform: translateY(0px); }
-        }
-      `}
-    </style>
-  </Box>
-);
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    mt: 2,
+                    alignItems: "center",
+                  }}
+                >
+                  <Button
+                    size="small"
+                    variant={movie.watched ? "contained" : "outlined"}
+                    color={movie.watched ? "success" : "secondary"}
+                    startIcon={
+                      movie.watched ? <VisibilityIcon /> : <VisibilityOffIcon />
+                    }
+                    onClick={() => toggleWatched(movie.id)}
+                  >
+                    {movie.watched ? "Watched" : "Mark Watched"}
+                  </Button>
+                  <Chip
+                    label={movie.watched ? "Watched" : "To Watch"}
+                    color={movie.watched ? "success" : "default"}
+                    icon={<MovieIcon />}
+                    size="small"
+                  />
+                </Box>
+              </Paper>
+            </Grid>
+          ))
+        )}
+      </Grid>
+    </Box>
+  );
 }

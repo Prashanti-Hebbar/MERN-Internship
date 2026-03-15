@@ -11,10 +11,11 @@ export default function UserRoute() {
     <div>
       <Topbar />
       <Routes>
-        <Route path='/uhome' element={<UHome />}/>
-        <Route path='/about' element={<AboutPage />}/>
-        <Route path='/homepage' element={<HomePage />}/>
-        <Route path='/' element={<Register />}/> 
+        <Route index element={<HomePage />} />
+        <Route path='/uhome' element={<UHome />} />
+        <Route path='/about' element={<AboutPage />} />
+        <Route path='/homepage' element={<HomePage />} />
+        <Route path='/register' element={<Register />} />
       </Routes>
     </div>
   )
