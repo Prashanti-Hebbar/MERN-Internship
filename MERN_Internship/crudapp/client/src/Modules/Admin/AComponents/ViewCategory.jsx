@@ -1,74 +1,196 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react"
 import {
-  Box, Typography, Paper, Table, TableBody, TableCell, TableContainer,
-  TableHead, TableRow, IconButton,
-} from '@mui/material'
-import DeleteIcon from '@mui/icons-material/Delete'
+  Box,
+  Typography,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Button,
+  TextField
+} from "@mui/material"
 
 export default function ViewCategory() {
+
   const [categories, setCategories] = useState([])
+  const [editId, setEditId] = useState(null)
+  const [editName, setEditName] = useState("")
 
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem('categories')) || []
+    const stored = JSON.parse(localStorage.getItem("categories")) || []
     setCategories(stored)
   }, [])
 
+  const updateStorage = (data) => {
+    localStorage.setItem("categories", JSON.stringify(data))
+  }
+
   const handleDelete = (id) => {
-    const updated = categories.filter((cat) => cat.id !== id)
+
+  const updatedCategories = categories.filter((cat) => cat.id !== id)
+
+  setCategories(updatedCategories)
+
+  updateStorage(updatedCategories)
+
+  if (editId === id) {
+    setEditId(null)
+    setEditName("")
+  }
+}
+
+  const handleEdit = (cat) => {
+    setEditId(cat.id)
+    setEditName(cat.name)
+  }
+
+  const handleUpdate = (id) => {
+    const updated = categories.map((cat) =>
+      cat.id === id ? { ...cat, name: editName } : cat
+    )
+
     setCategories(updated)
-    localStorage.setItem('categories', JSON.stringify(updated))
+    updateStorage(updated)
+    setEditId(null)
+    setEditName("")
+  }
+
+  const handleCancel = () => {
+    setEditId(null)
+    setEditName("")
   }
 
   return (
     <Box>
+
       <Typography variant="h4" fontWeight={700} mb={1}>
         View Categories
       </Typography>
+
       <Typography variant="body1" color="text.secondary" mb={4}>
-        All categories listed below.
+        All categories listed below
       </Typography>
 
-      <Paper elevation={0} sx={{
-        borderRadius: 3,
-        overflow: 'hidden',
-        background: 'rgba(255,255,255,0.9)',
-        backdropFilter: 'blur(10px)',
-        border: '1px solid rgba(0,0,0,0.05)',
-      }}>
+      <Paper sx={{ borderRadius: 3 }}>
+
         <TableContainer>
+
           <Table>
+
             <TableHead>
-              <TableRow sx={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
-                <TableCell sx={{ color: '#fff', fontWeight: 700 }}>#</TableCell>
-                <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Category Name</TableCell>
-                <TableCell sx={{ color: '#fff', fontWeight: 700 }} align="center">Action</TableCell>
+              <TableRow sx={{ background: "#667eea" }}>
+                <TableCell sx={{ color: "#fff", fontWeight: 700 }}>#</TableCell>
+                <TableCell sx={{ color: "#fff", fontWeight: 700 }}>
+                  Category Name
+                </TableCell>
+                <TableCell align="center" sx={{ color: "#fff", fontWeight: 700 }}>
+                  Actions
+                </TableCell>
               </TableRow>
             </TableHead>
+
             <TableBody>
-            1  {categories.length > 0 ? categories.map((cat, index) => (
-                <TableRow key={cat.id} sx={{
-                  '&:hover': { bgcolor: 'rgba(102,126,234,0.05)' },
-                  transition: 'background 0.2s',
-                }}>
-                  <TableCell>{index + 1}</TableCell>
-                  <TableCell>{cat.name}</TableCell>
-                  <TableCell align="center">
-                    <IconButton color="error" onClick={() => handleDelete(cat.id)} size="small">
-                      <DeleteIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              )) : (
+
+              {categories.length > 0 ? (
+
+                categories.map((cat, index) => (
+
+                  <TableRow key={cat.id}>
+
+                    <TableCell>{index + 1}</TableCell>
+
+                    <TableCell>
+
+                      {editId === cat.id ? (
+
+                        <TextField
+                          size="small"
+                          value={editName}
+                          onChange={(e) => setEditName(e.target.value)}
+                        />
+
+                      ) : (
+
+                        cat.name
+
+                      )}
+
+                    </TableCell>
+
+                    <TableCell align="center">
+
+                      {editId === cat.id ? (
+
+                        <>
+                          <Button
+                            size="small"
+                            variant="contained"
+                            onClick={() => handleUpdate(cat.id)}
+                            sx={{ mr: 1 }}
+                          >
+                            Save
+                          </Button>
+
+                          <Button
+                            size="small"
+                            variant="outlined"
+                            onClick={handleCancel}
+                          >
+                            Cancel
+                          </Button>
+                        </>
+
+                      ) : (
+
+                        <>
+                          <Button
+                            size="small"
+                            variant="text"
+                            onClick={() => handleEdit(cat)}
+                            sx={{ mr: 1 }}
+                          >
+                            Update
+                          </Button>
+
+                          <Button
+                            size="small"
+                            color="error"
+                            variant="text"
+                            onClick={() => handleDelete(cat.id)}
+                          >
+                            Delete
+                          </Button>
+                        </>
+
+                      )}
+
+                    </TableCell>
+
+                  </TableRow>
+
+                ))
+
+              ) : (
+
                 <TableRow>
-                  <TableCell colSpan={3} align="center" sx={{ py: 4 }}>
-                    <Typography color="text.secondary">No categories found</Typography>
+                  <TableCell colSpan={3} align="center">
+                    No categories found
                   </TableCell>
                 </TableRow>
+
               )}
+
             </TableBody>
+
           </Table>
+
         </TableContainer>
+
       </Paper>
+
     </Box>
   )
 }

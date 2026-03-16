@@ -46,8 +46,8 @@ export default function ViewUser() {
         users.filter(
           (u) =>
             u.name.toLowerCase().includes(t) ||
-            u.email.toLowerCase().includes(t)
-        )
+            u.email.toLowerCase().includes(t),
+        ),
       );
     }
     setPage(0);
@@ -61,6 +61,24 @@ export default function ViewUser() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
+  const handleDelete = (uid) => {
+  axios
+    .delete(`http://localhost:3000/user/deleteUserById/${uid}`)
+    .then((res) => {
+      alert("User Deleted..!")
+
+      const updatedUsers = users.filter((u) => u._id !== uid)
+
+      setUsers(updatedUsers)
+      setFiltered(updatedUsers)
+    })
+    .catch((error) => {
+      console.error(error)
+    })
+}
+
+
 
   return (
     <Paper sx={{ p: 3, mt: 2 }} elevation={3}>
@@ -88,10 +106,11 @@ export default function ViewUser() {
               <TableHead>
                 <TableRow>
                   <TableCell>#</TableCell>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Email</TableCell>
-                  <TableCell>Phone</TableCell>
-                  <TableCell>Address</TableCell>
+                  <TableCell>NAME</TableCell>
+                  <TableCell>EMAIL</TableCell>
+                  <TableCell>PHONE</TableCell>
+                  <TableCell>ADDRESS</TableCell>
+                  <TableCell>ACTION</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -110,6 +129,14 @@ export default function ViewUser() {
                       <TableCell>{user.email}</TableCell>
                       <TableCell>{user.phone}</TableCell>
                       <TableCell>{user.address}</TableCell>
+                      <TableCell>
+                        <button onClick={() => handleUpdate(user._id)}>UPDATE</button>
+                        <button
+                          variant="outlined"
+                          onClick={() => handleDelete(user._id)}>
+                          DELETE
+                        </button>
+                      </TableCell>
                     </TableRow>
                   ))}
               </TableBody>

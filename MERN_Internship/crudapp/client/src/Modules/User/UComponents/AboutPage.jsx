@@ -40,7 +40,7 @@ export default function About() {
                 textShadow: "0 0 20px rgba(255,255,255,0.4)"
             }}
             >
-            Streakly
+            Movie
             </Typography>
 
             <Typography variant="h5" mt={2}>

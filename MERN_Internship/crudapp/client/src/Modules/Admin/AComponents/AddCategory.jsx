@@ -1,60 +1,140 @@
-import React, { useState } from 'react'
-import { Box, Typography, Paper, TextField, Button, Alert } from '@mui/material'
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
+import React, { useState } from "react"
+import {
+  Box,
+  Typography,
+  Paper,
+  TextField,
+  Button,
+  Alert,
+  Divider
+} from "@mui/material"
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline"
 
 export default function AddCategory() {
-  const [category, setCategory] = useState('')
+
+  const [category, setCategory] = useState("")
   const [success, setSuccess] = useState(false)
 
   const handleSubmit = (e) => {
+
     e.preventDefault()
+
     if (!category.trim()) return
 
-    const existing = JSON.parse(localStorage.getItem('categories')) || []
-    existing.push({ name: category.trim(), id: Date.now() })
-    localStorage.setItem('categories', JSON.stringify(existing))
-    setCategory('')
+    const existing = JSON.parse(localStorage.getItem("categories")) || []
+
+    existing.push({
+      name: category.trim(),
+      id: Date.now()
+    })
+
+    localStorage.setItem("categories", JSON.stringify(existing))
+
+    setCategory("")
     setSuccess(true)
+
     setTimeout(() => setSuccess(false), 3000)
   }
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-      <Paper elevation={0} sx={{
-        p: 5, width: 500, borderRadius: 4,
-        background: 'rgba(255,255,255,0.9)',
-        backdropFilter: 'blur(10px)',
-        border: '1px solid rgba(0,0,0,0.05)',
-        textAlign: 'center',
-      }}>
-        <AddCircleOutlineIcon sx={{ fontSize: 48, color: '#667eea', mb: 2 }} />
-        <Typography variant="h5" fontWeight={700} mb={1}>
+
+    <Box sx={{ p: 4 }}>
+
+      {/* Page Title */}
+
+      <Box sx={{ mb: 3 }}>
+
+        <Typography
+          variant="h4"
+          fontWeight={700}
+        >
           Add Category
         </Typography>
-        <Typography variant="body2" color="text.secondary" mb={3}>
-          Create a new category for your system
+
+        <Typography
+          variant="body2"
+          color="text.secondary"
+        >
+          Create categories to organize your books
         </Typography>
 
-        {success && <Alert severity="success" sx={{ mb: 2 }}>Category added successfully!</Alert>}
+      </Box>
+
+      {/* Form Card */}
+
+      <Paper
+        elevation={0}
+        sx={{
+          p: 4,
+          maxWidth: 600,
+          borderRadius: 3,
+          border: "1px solid #e5e7eb"
+        }}
+      >
+
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            mb: 2
+          }}
+        >
+
+          <AddCircleOutlineIcon
+            sx={{ color: "#6366f1" }}
+          />
+
+          <Typography fontWeight={600}>
+            Category Details
+          </Typography>
+
+        </Box>
+
+        <Divider sx={{ mb: 3 }} />
+
+        {success && (
+          <Alert
+            severity="success"
+            sx={{ mb: 3 }}
+          >
+            Category added successfully
+          </Alert>
+        )}
 
         <form onSubmit={handleSubmit}>
+
           <TextField
-            fullWidth label="Category Name" variant="outlined"
-            value={category} onChange={(e) => setCategory(e.target.value)}
-            required sx={{ mb: 3 }}
+            label="Category Name"
+            fullWidth
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            placeholder="Example: Fiction, Science, History"
+            sx={{ mb: 3 }}
           />
+
           <Button
-            type="submit" fullWidth variant="contained" size="large"
+            type="submit"
+            variant="contained"
             sx={{
-              py: 1.5, borderRadius: 50, fontWeight: 700, fontSize: '1rem',
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              '&:hover': { background: 'linear-gradient(135deg, #5a6fd6 0%, #6a4190 100%)' },
+              px: 4,
+              py: 1.3,
+              fontWeight: 600,
+              background: "#6366f1",
+              borderRadius: 2,
+              "&:hover": {
+                background: "#4f46e5"
+              }
             }}
           >
             Add Category
           </Button>
+
         </form>
+
       </Paper>
+
     </Box>
+
   )
 }
