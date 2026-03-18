@@ -1,24 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Typography,
   Paper,
   TextField,
   Button,
-  Alert
+  Alert,
 } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import InputLabel from "@mui/material/InputLabel";
+import axios from "axios";
 
 export default function AddProduct() {
   const [formData, setFormData] = useState({
     name: "",
     price: "",
     quantity: "",
-    description: ""
+    description: "",
+    categoryId: "",
   });
 
+  const [category, setCategory] = useState([]);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/category/getCategories")
+      .then((res) => {
+        console.log("API:", res.data);
+
+        setCategory(res.data.categories); // 🔥 FIXED
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+        setCategory([]);
+      });
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -40,11 +61,14 @@ export default function AddProduct() {
     }
 
     try {
-      const response = await fetch("/product/createProduct", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData)
-      });
+      const response = await fetch(
+        "http://localhost:3000/product/createProduct",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        },
+      );
 
       const data = await response.json();
 
@@ -54,7 +78,8 @@ export default function AddProduct() {
           name: "",
           price: "",
           quantity: "",
-          description: ""
+          description: "",
+          categoryId: "",
         });
 
         setTimeout(() => setSuccess(false), 3000);
@@ -66,7 +91,7 @@ export default function AddProduct() {
       console.error(err);
     }
   };
-
+  console.log("CATEGORY STATE:", category);
   return (
     <Box
       sx={{
@@ -75,7 +100,7 @@ export default function AddProduct() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        p: 3
+        p: 3,
       }}
     >
       <Paper
@@ -85,16 +110,15 @@ export default function AddProduct() {
           maxWidth: 520,
           borderRadius: 4,
           boxShadow: "0 15px 40px rgba(0,0,0,0.08)",
-          textAlign: "center"
+          textAlign: "center",
         }}
       >
-
         {/* ICON */}
         <AddCircleOutlineIcon
           sx={{
             fontSize: 50,
             color: "#6366f1",
-            mb: 2
+            mb: 2,
           }}
         />
 
@@ -120,7 +144,6 @@ export default function AddProduct() {
         )}
 
         <form onSubmit={handleSubmit}>
-
           <TextField
             fullWidth
             label="Product Name"
@@ -160,7 +183,25 @@ export default function AddProduct() {
             onChange={handleChange}
             sx={{ mb: 3 }}
           />
+          <FormControl fullWidth sx={{ mb: 3 }}>
+            <InputLabel>Category</InputLabel>
 
+            <Select
+              name="categoryId"
+              value={formData.categoryId}
+              label="Category"
+              onChange={handleChange}
+            >
+              <MenuItem value="">Select Category</MenuItem>
+
+              {Array.isArray(category) &&
+                category.map((cat) => (
+                  <MenuItem key={cat._id} value={cat._id}>
+                    {cat.name}
+                  </MenuItem>
+                ))}
+            </Select>
+          </FormControl>
           <Button
             type="submit"
             fullWidth
@@ -169,19 +210,15 @@ export default function AddProduct() {
               py: 1.5,
               fontWeight: 600,
               borderRadius: 2,
-              background:
-                "linear-gradient(90deg, #6366f1, #a855f7)",
+              background: "linear-gradient(90deg, #6366f1, #a855f7)",
               "&:hover": {
-                background:
-                  "linear-gradient(90deg, #4f46e5, #9333ea)"
-              }
+                background: "linear-gradient(90deg, #4f46e5, #9333ea)",
+              },
             }}
           >
             Add Product
           </Button>
-
         </form>
-
       </Paper>
     </Box>
   );

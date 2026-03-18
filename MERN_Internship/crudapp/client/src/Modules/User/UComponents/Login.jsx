@@ -6,8 +6,10 @@ import {
   Button,
   Checkbox,
   FormControlLabel,
-  Box
+  Box,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 // import img1 from "./img1.jpg";
 // import img2 from "./img2.jpg";
@@ -18,6 +20,7 @@ export default function Login() {
     email: "",
     password: "",
   });
+  const navigate = useNavigate();
 
   // const images = [img1, img2, img3];
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -36,21 +39,19 @@ export default function Login() {
   };
 
   const handleLogin = () => {
-    const users = JSON.parse(localStorage.getItem("userdetails")) || [];
-    
+    axios
+      .post("http://localhost:3000/user/loginUser", formdata)
+      .then((res) => {
+        alert("Login successful!");
 
-    const validUser = users.find(
-      (user) =>
-        user.email === formdata.email &&
-        user.password === formdata.password
-    );
+        // optional: store user
+        localStorage.setItem("user", JSON.stringify(res.data.user));
 
-    if (validUser) {
-      alert("Login successful!");
-      window.location.href = "/homepage";
-    } else {
-      alert("Invalid email or password");
-    }
+        navigate("/");
+      })
+      .catch(() => {
+        alert("Invalid email or password");
+      });
   };
 
   return (
@@ -83,12 +84,7 @@ export default function Login() {
             justifyContent: "center",
           }}
         >
-          <Typography
-            variant="h4"
-            mb={3}
-            fontWeight={600}
-            textAlign="center"
-          >
+          <Typography variant="h4" mb={3} fontWeight={600} textAlign="center">
             Login
           </Typography>
 
@@ -136,7 +132,7 @@ export default function Login() {
                 cursor: "pointer",
                 fontWeight: 500,
               }}
-              onClick={() => window.location.href = "/register"}
+              onClick={() => (window.location.href = "/register")}
             >
               Register
             </span>

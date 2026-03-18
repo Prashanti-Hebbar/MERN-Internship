@@ -1,9 +1,10 @@
 const express = require('express');
-const {registerUser, getUser, getUserById, deleteUserById, updateUser} = require('../Controller/userController');
+const {registerUser, loginUser,  getUser, getUserById, deleteUserById, updateUser} = require('../Controller/userController');
 
 const route = express.Router();
 
 route.post('/registerUser', registerUser);
+route.post('/loginUser', loginUser);
 route.get('/getUser', getUser);
 route.get('/getUserById/:id', getUserById); // we are using :id to get the user by id from the database
 route.delete('/deleteUserById/:id', deleteUserById) // we are using :id to delete the user by id from the database

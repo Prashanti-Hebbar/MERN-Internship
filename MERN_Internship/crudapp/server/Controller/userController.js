@@ -22,6 +22,21 @@ const registerUser = async(req, res) => {
     }
 }
 
+const loginUser = async(req, res) => {
+    try {
+        const {email, password} = req.body
+        const user = await userTable.findOne({email, password})
+        if(!user){
+            res.status(404).json({message:"login failed", user})
+        }
+        res.status(200).json({message:"login successful", user})
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message:"server error", error})
+    }
+}
+
+
 const getUser = async(req, res) => {
     try {
         const getAllUser = await userTable.find()
@@ -78,4 +93,4 @@ const updateUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, getUser, getUserById, deleteUserById, updateUser}
+module.exports = { registerUser, loginUser, getUser, getUserById, deleteUserById, updateUser}

@@ -2,12 +2,13 @@ const productTable = require("../Models/productModel");
 
 const createProduct = async (req, res) => {
     try {
-        const { name, price, quantity, description } = req.body;
+        const { name, price, quantity, description, categoryId } = req.body;
         const productDetails = new productTable({
             name,
             price,
             quantity,
-            description
+            description,
+            categoryId
         });
         await productDetails.save();
         res.status(201).json({ message: "Product added successfully", product: productDetails });
