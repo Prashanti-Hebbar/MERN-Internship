@@ -1,166 +1,158 @@
 import React from "react";
-import { Box, Typography, Container, Grid, Paper, Button } from "@mui/material";
-import WhatshotIcon from "@mui/icons-material/Whatshot";
-import TimelineIcon from "@mui/icons-material/Timeline";
-import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
-import InsightsIcon from "@mui/icons-material/Insights";
+import {
+  Box,
+  Typography,
+  Container,
+  Grid,
+  Paper,
+  Button
+} from "@mui/material";
+import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
+import CategoryIcon from "@mui/icons-material/Category";
+import GroupsIcon from "@mui/icons-material/Groups";
+import VerifiedIcon from "@mui/icons-material/Verified";
+import { useNavigate } from "react-router-dom";
 
 export default function About() {
+  const navigate = useNavigate();
+
   return (
-    <Box sx={{ overflowX: "hidden" }}>
+    <Box sx={{ background: "#f9fafb" }}>
 
-      {/* HERO SECTION */}
-        <Box
+      {/* 🔥 HERO */}
+      <Box
         sx={{
-            position: "relative",
-            minHeight: "60vh",
-            overflow: "hidden",
-            background: "linear-gradient(-45deg, #0f2027, #1e3c72, #2a5298, #203a43)",
-            backgroundSize: "400% 400%",
-            animation: "gradientMove 12s ease infinite",
-            color: "white",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            textAlign: "center",
+          minHeight: "70vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center"
         }}
-        >
-
-        {/* Floating Circles */}
-        <Box className="circle circle1" />
-        <Box className="circle circle2" />
-        <Box className="circle circle3" />
-
-        <Box sx={{ position: "relative", zIndex: 2 }}>
-            <Typography
+      >
+        <Box sx={{ maxWidth: 700, textAlign: "center", px: 2 }}>
+          <Typography
             variant="h2"
-            fontWeight="bold"
+            fontWeight={800}
             sx={{
-                letterSpacing: 2,
-                textShadow: "0 0 20px rgba(255,255,255,0.4)"
+              background: "linear-gradient(90deg, #6366f1, #ec4899)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent"
             }}
-            >
-            Movie
-            </Typography>
+          >
+            CartZen Store
+          </Typography>
 
-            <Typography variant="h5" mt={2}>
-            Build Small Habits. Create Big Results.
-            </Typography>
+          <Typography variant="h6" mt={3} color="text.secondary">
+            A modern platform to manage products, users, and categories with ease.
+          </Typography>
+
+          <Button
+            variant="contained"
+            sx={{
+              mt: 4,
+              px: 5,
+              py: 1.5,
+              fontWeight: 600,
+              borderRadius: 3,
+              background: "linear-gradient(90deg, #6366f1, #ec4899)"
+            }}
+            onClick={() => navigate("/user/homepage")}
+          >
+            Explore Store
+          </Button>
         </Box>
+      </Box>
 
-        {/* Animations */}
-        <style>
-            {`
-            @keyframes gradientMove {
-                0% { background-position: 0% 50%; }
-                50% { background-position: 100% 50%; }
-                100% { background-position: 0% 50%; }
-            }
-
-            .circle {
-                position: absolute;
-                border-radius: 50%;
-                background: rgba(255,255,255,0.08);
-                animation: float 8s infinite ease-in-out;
-            }
-
-            .circle1 {
-                width: 200px;
-                height: 200px;
-                top: 10%;
-                left: 15%;
-            }
-
-            .circle2 {
-                width: 300px;
-                height: 300px;
-                bottom: 15%;
-                right: 10%;
-                animation-delay: 2s;
-            }
-
-            .circle3 {
-                width: 150px;
-                height: 150px;
-                top: 50%;
-                left: 70%;
-                animation-delay: 4s;
-            }
-
-            @keyframes float {
-                0% { transform: translateY(0px); }
-                50% { transform: translateY(-30px); }
-                100% { transform: translateY(0px); }
-            }
-            `}
-        </style>
-        </Box>
-
-      {/* 📌 ABOUT SECTION */}
-      <Container sx={{ py: 8 }}>
-        <Typography variant="h4" fontWeight={600} textAlign="center" mb={3}>
-          What is Streakly?
-        </Typography>
-        <Typography
-          variant="body1"
-          textAlign="center"
-          color="text.secondary"
-          maxWidth="700px"
-          mx="auto"
-        >
-          Streakly is a mini habit streak tracking app designed to help you stay
-          consistent with small daily goals. Whether it's reading, coding,
-          exercising, or drinking water — Streakly keeps you accountable and
-          motivated every single day.
-        </Typography>
-      </Container>
-
-      {/* 🚀 FEATURES SECTION */}
-      <Container sx={{ pb: 10 }}>
-        <Grid container spacing={4}>
+      {/* 📊 STATS */}
+      <Container sx={{ pb: 8 }}>
+        <Grid container spacing={3} justifyContent="center">
           {[
-            {
-              icon: <WhatshotIcon fontSize="large" sx={{ color: "#2196f3" }} />,
-              title: "Daily Streak Tracking",
-              desc: "Track your daily habits and never break your streak."
-            },
-            {
-              icon: <TimelineIcon fontSize="large" sx={{ color: "#1e88e5" }} />,
-              title: "Progress Analytics",
-              desc: "Visual insights to measure your consistency."
-            },
-            {
-              icon: <EmojiEventsIcon fontSize="large" sx={{ color: "#42a5f5" }} />,
-              title: "Achievement Badges",
-              desc: "Earn rewards as you build stronger habits."
-            },
-            {
-              icon: <InsightsIcon fontSize="large" sx={{ color: "#64b5f6" }} />,
-              title: "Smart Insights",
-              desc: "Understand your patterns and improve daily."
-            }
-          ].map((item, index) => (
-            <Grid item xs={12} md={6} key={index}>
+            { label: "Products", value: "100+" },
+            { label: "Categories", value: "20+" },
+            { label: "Users", value: "500+" },
+            { label: "Orders", value: "1K+" }
+          ].map((item, i) => (
+            <Grid item xs={6} md={3} key={i}>
               <Paper
-                elevation={6}
                 sx={{
-                  p: 4,
-                  borderRadius: 3,
+                  p: 3,
                   textAlign: "center",
-                  background: "rgba(33,150,243,0.08)",
-                  backdropFilter: "blur(10px)",
-                  transition: "0.4s",
-                  "&:hover": {
-                    transform: "translateY(-10px)",
-                    boxShadow: "0 15px 30px rgba(33,150,243,0.3)"
-                  },
+                  borderRadius: 3,
+                  maxWidth: 180,
+                  mx: "auto",
+                  boxShadow: "0 5px 20px rgba(0,0,0,0.05)"
                 }}
               >
-                {item.icon}
-                <Typography variant="h6" mt={2} fontWeight={600}>
+                <Typography variant="h5" fontWeight={700}>
+                  {item.value}
+                </Typography>
+                <Typography color="text.secondary">
+                  {item.label}
+                </Typography>
+              </Paper>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
+
+      {/* 🚀 FEATURES */}
+      <Container sx={{ pb: 10 }}>
+        <Box sx={{ maxWidth: 800, mx: "auto", textAlign: "center", mb: 6 }}>
+          <Typography variant="h4" fontWeight={700}>
+            Why Choose Us?
+          </Typography>
+          <Typography color="text.secondary" mt={2}>
+            Everything you need to manage and shop efficiently.
+          </Typography>
+        </Box>
+
+        <Grid container spacing={4} justifyContent="center">
+          {[
+            {
+              icon: <ShoppingBagIcon fontSize="large" />,
+              title: "Easy Shopping",
+              desc: "Smooth and simple product browsing experience."
+            },
+            {
+              icon: <CategoryIcon fontSize="large" />,
+              title: "Smart Categories",
+              desc: "Organized products for quick discovery."
+            },
+            {
+              icon: <GroupsIcon fontSize="large" />,
+              title: "User Friendly",
+              desc: "Designed for both admins and users."
+            },
+            {
+              icon: <VerifiedIcon fontSize="large" />,
+              title: "Reliable System",
+              desc: "Secure backend and efficient data flow."
+            }
+          ].map((item, index) => (
+            <Grid item xs={12} sm={6} md={3} key={index}>
+              <Paper
+                sx={{
+                  p: 4,
+                  borderRadius: 4,
+                  textAlign: "center",
+                  maxWidth: 250,
+                  mx: "auto",
+                  transition: "0.3s",
+                  boxShadow: "0 10px 30px rgba(0,0,0,0.05)",
+                  "&:hover": {
+                    transform: "translateY(-10px)",
+                    boxShadow: "0 20px 40px rgba(0,0,0,0.1)"
+                  }
+                }}
+              >
+                <Box sx={{ mb: 2, color: "#6366f1" }}>
+                  {item.icon}
+                </Box>
+
+                <Typography fontWeight={600}>
                   {item.title}
                 </Typography>
-                <Typography variant="body2" mt={1} color="text.secondary">
+
+                <Typography variant="body2" color="text.secondary" mt={1}>
                   {item.desc}
                 </Typography>
               </Paper>
@@ -169,58 +161,39 @@ export default function About() {
         </Grid>
       </Container>
 
-      {/* 💡 MOTIVATION SECTION */}
+      {/* 🎯 CTA */}
       <Box
         sx={{
-          background: "linear-gradient(135deg, #1e3c72, #2a5298)",
-          color: "white",
-          py: 8,
+          py: 10,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
           textAlign: "center",
-          px: 2,
+          background: "#111827",
+          color: "white"
         }}
       >
-        <Typography variant="h4" fontWeight={600}>
-          “Consistency beats motivation.”
-        </Typography>
-        <Typography variant="body1" mt={2} sx={{ opacity: 0.8 }}>
-          Small actions repeated daily create powerful results over time.
-        </Typography>
-      </Box>
+        <Box sx={{ maxWidth: 600 }}>
+          <Typography variant="h5" fontWeight={600}>
+            Ready to start shopping?
+          </Typography>
 
-      {/* 🚀 CALL TO ACTION */}
-      <Box sx={{ py: 8, textAlign: "center" }}>
-        <Typography variant="h5" fontWeight={600}>
-          Ready to start your streak?
-        </Typography>
-        <Button
-          variant="contained"
-          sx={{
-            mt: 3,
-            px: 5,
-            py: 1.5,
-            background: "linear-gradient(135deg, #2196f3, #1e88e5)",
-            boxShadow: "0 5px 20px rgba(33,150,243,0.4)",
-            transition: "0.3s",
-            "&:hover": {
-              transform: "scale(1.05)",
-              boxShadow: "0 8px 25px rgba(33,150,243,0.6)",
-            },
-          }}  onClick={() => window.location.href = '/register'}
-        >
-          Get Started 
-        </Button>
+          <Button
+            variant="contained"
+            sx={{
+              mt: 3,
+              px: 6,
+              py: 1.5,
+              fontWeight: 600,
+              borderRadius: 3,
+              background: "linear-gradient(90deg, #6366f1, #ec4899)"
+            }}
+            onClick={() => navigate("/user/homepage")}
+          >
+            Shop Now
+          </Button>
+        </Box>
       </Box>
-
-      {/* Gradient Animation Keyframes */}
-      <style>
-        {`
-          @keyframes gradientMove {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-          }
-        `}
-      </style>
 
     </Box>
   );

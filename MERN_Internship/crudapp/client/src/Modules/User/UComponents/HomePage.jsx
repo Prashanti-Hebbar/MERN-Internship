@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -6,322 +6,109 @@ import {
   Paper,
   Button,
   TextField,
-  MenuItem,
-  Chip,
-  IconButton,
+  Chip
 } from "@mui/material";
-import MovieIcon from "@mui/icons-material/Movie";
-import DeleteIcon from "@mui/icons-material/Delete";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import axios from "axios";
 
-const genres = [
-  "Action",
-  "Drama",
-  "Comedy",
-  "Thriller",
-  "Romance",
-  "Sci-Fi",
-  "Animation",
-];
-
-export default function MovieWatchlist() {
-  const [title, setTitle] = useState("");
-  const [year, setYear] = useState("");
-  const [genre, setGenre] = useState("");
-  const [filter, setFilter] = useState("all");
-
-  const [movies, setMovies] = useState(
-    JSON.parse(localStorage.getItem("movieWatchlist")) || []
-  );
+export default function ShopPage() {
+  const [products, setProducts] = useState([]);
+  const [search, setSearch] = useState("");
+  const [cart, setCart] = useState([]);
 
   useEffect(() => {
-    localStorage.setItem("movieWatchlist", JSON.stringify(movies));
-  }, [movies]);
+    fetchProducts();
+  }, []);
 
-  const addMovie = () => {
-    if (!title.trim()) return;
-
-    const newMovie = {
-      id: Date.now(),
-      title: title.trim(),
-      year: year.trim(),
-      genre: genre || "Unknown",
-      watched: false,
-    };
-
-    setMovies([newMovie, ...movies]);
-    setTitle("");
-    setYear("");
-    setGenre("");
+  const fetchProducts = () => {
+    axios.get("http://localhost:3000/product/getProducts")
+      .then(res => {
+        setProducts(res.data.products);
+      })
+      .catch(err => console.error(err));
   };
 
-  const toggleWatched = (id) => {
-    setMovies(
-      movies.map((m) =>
-        m.id === id ? { ...m, watched: !m.watched } : m
-      )
-    );
+  const addToCart = (product) => {
+    setCart([...cart, product]);
   };
 
-  const deleteMovie = (id) => {
-    setMovies(movies.filter((m) => m.id !== id));
-  };
-
-  const filteredMovies = movies.filter((m) => {
-    if (filter === "watched") return m.watched;
-    if (filter === "unwatched") return !m.watched;
-    return true;
-  });
-
-  const watchedCount = movies.filter((m) => m.watched).length;
-  const totalCount = movies.length;
+  const filteredProducts = products.filter(p =>
+    p.name.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        background: "linear-gradient(135deg, #0f2027, #2c5364)",
-        px: { xs: 2, md: 6 },
-        py: 5,
-        color: "#fff",
-      }}
-    >
-      <Box mb={5}>
-        <Typography variant="h3" fontWeight="bold" sx={{ letterSpacing: 1 }}>
-          🎬 Movie Watchlist
+    <Box sx={{ p: 4, background: "#f5f7fa", minHeight: "100vh" }}>
+
+      {/* 🔥 HEADER */}
+      <Box mb={4}>
+        <Typography variant="h4" fontWeight={700}>
+          🛒 Shop Products
         </Typography>
-        <Typography sx={{ opacity: 0.8 }}>
-          Track what you want to watch next and mark movies as watched.
+        <Typography color="text.secondary">
+          Browse and add products to your cart
         </Typography>
       </Box>
 
-      <Paper
-        sx={{
-          p: 4,
-          mb: 5,
-          borderRadius: 4,
-          background: "rgba(255,255,255,0.08)",
-          backdropFilter: "blur(12px)",
-          border: "1px solid rgba(255,255,255,0.2)",
-        }}
-      >
-        <Typography mb={2} fontWeight={700} color="white">
-          Add a Movie
-        </Typography>
+      {/* 🔍 SEARCH */}
+      <Box mb={4}>
+        <TextField
+          fullWidth
+          label="Search Products"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </Box>
 
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={4}>
-            <TextField
-              fullWidth
-              label="Movie Title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              InputLabelProps={{ style: { color: "rgba(255,255,255,0.7)" } }}
-              sx={{
-                '& .MuiInputBase-input': { color: 'white' },
-                fieldset: { borderColor: "rgba(255,255,255,0.4)" },
-                '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
-                  borderColor: "rgba(255,255,255,0.6)",
-                },
-                '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                  borderColor: "#00bcd4",
-                },
-              }}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={2}>
-            <TextField
-              fullWidth
-              label="Year"
-              value={year}
-              onChange={(e) => setYear(e.target.value)}
-              InputLabelProps={{ style: { color: "rgba(255,255,255,0.7)" } }}
-              sx={{
-                '& .MuiInputBase-input': { color: 'white' },
-                fieldset: { borderColor: "rgba(255,255,255,0.4)" },
-                '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
-                  borderColor: "rgba(255,255,255,0.6)",
-                },
-                '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                  borderColor: "#00bcd4",
-                },
-              }}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={3}>
-            <TextField
-              select
-              fullWidth
-              label="Genre"
-              value={genre}
-              onChange={(e) => setGenre(e.target.value)}
-              InputLabelProps={{ style: { color: "rgba(255,255,255,0.7)" } }}
-              sx={{
-                '& .MuiInputBase-input': { color: 'white' },
-                fieldset: { borderColor: "rgba(255,255,255,0.4)" },
-                '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
-                  borderColor: "rgba(255,255,255,0.6)",
-                },
-                '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                  borderColor: "#00bcd4",
-                },
-                '& .MuiSelect-icon': { color: "rgba(255,255,255,0.7)" },
-              }}
-            >
-              <MenuItem value="">Select genre</MenuItem>
-              {genres.map((g) => (
-                <MenuItem key={g} value={g} sx={{ color: "black" }}>
-                  {g}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid>
-
-          <Grid item xs={12} md={3}>
-            <Button
-              fullWidth
-              variant="contained"
-              color="secondary"
-              onClick={addMovie}
-              sx={{ height: "100%" }}
-            >
-              Add to Watchlist
-            </Button>
-          </Grid>
-        </Grid>
-      </Paper>
-
-      <Paper
-        sx={{
-          p: 4,
-          mb: 5,
-          borderRadius: 4,
-          background: "rgba(255,255,255,0.08)",
-          backdropFilter: "blur(12px)",
-          border: "1px solid rgba(255,255,255,0.2)",
-        }}
-      >
-        <Box
+      {/* 🧾 CART SUMMARY */}
+      <Box mb={4}>
+        <Chip
+          label={`Cart: ${cart.length} items`}
           sx={{
-            display: "flex",
-            flexWrap: "wrap",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: 2,
+            background: "linear-gradient(90deg, #6366f1, #a855f7)",
+            color: "white"
           }}
-        >
-          <Box>
-            <Typography variant="h6" color="white">Your Summary</Typography>
-            <Typography sx={{ opacity: 0.75 }} color="white">
-              {totalCount} movies total · {watchedCount} watched
-            </Typography>
-          </Box>
+        />
+      </Box>
 
-          <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
-            {[
-              { label: "All", value: "all" },
-              { label: "To Watch", value: "unwatched" },
-              { label: "Watched", value: "watched" },
-            ].map((tab) => (
-              <Chip
-                key={tab.value}
-                label={tab.label}
-                clickable
-                onClick={() => setFilter(tab.value)}
-                color={filter === tab.value ? "secondary" : "default"}
-              />
-            ))}
-          </Box>
-        </Box>
-      </Paper>
-
+      {/* 🛍️ PRODUCT GRID */}
       <Grid container spacing={3}>
-        {filteredMovies.length === 0 ? (
-          <Grid item xs={12}>
-            <Paper
-              sx={{
-                p: 5,
-                textAlign: "center",
-                borderRadius: 4,
-                background: "rgba(255,255,255,0.05)",
-              }}
-            >
-              <Typography variant="h6" sx={{ opacity: 0.8 }} color="white">
-                Your watchlist is empty.
-              </Typography>
-              <Typography sx={{ opacity: 0.6 }} color="white">
-                Add a movie to start tracking what to watch next.
-              </Typography>
-            </Paper>
-          </Grid>
+        {filteredProducts.length === 0 ? (
+          <Typography>No products found</Typography>
         ) : (
-          filteredMovies.map((movie) => (
-            <Grid item xs={12} sm={6} md={4} key={movie.id}>
-              <Paper
-                sx={{
-                  p: 3,
-                  borderRadius: 4,
-                  background: "rgba(255,255,255,0.08)",
-                  backdropFilter: "blur(12px)",
-                  border: "1px solid rgba(255,255,255,0.15)",
-                }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    mb: 1,
-                  }}
-                >
-                  <Typography fontWeight={700}>{movie.title}</Typography>
-                  <IconButton
-                    size="small"
-                    onClick={() => deleteMovie(movie.id)}
-                    sx={{ color: "rgba(255,255,255,0.7)" }}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </Box>
+          filteredProducts.map((product) => (
+            <Grid item xs={12} sm={6} md={4} key={product._id}>
+              <Paper sx={{ p: 3, borderRadius: 3 }}>
 
-                <Typography sx={{ opacity: 0.7 }}>
-                  {movie.genre} • {movie.year || "Unknown"}
+                <Typography fontWeight={700}>
+                  {product.name}
                 </Typography>
 
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    mt: 2,
-                    alignItems: "center",
-                  }}
-                >
+                <Typography color="text.secondary" mt={1}>
+                  ₹{product.price}
+                </Typography>
+
+                <Typography variant="body2" mt={1}>
+                  {product.description}
+                </Typography>
+
+                <Box mt={2}>
                   <Button
-                    size="small"
-                    variant={movie.watched ? "contained" : "outlined"}
-                    color={movie.watched ? "success" : "secondary"}
-                    startIcon={
-                      movie.watched ? <VisibilityIcon /> : <VisibilityOffIcon />
-                    }
-                    onClick={() => toggleWatched(movie.id)}
+                    variant="contained"
+                    fullWidth
+                    onClick={() => addToCart(product)}
+                    sx={{
+                      background: "linear-gradient(90deg, #6366f1, #a855f7)"
+                    }}
                   >
-                    {movie.watched ? "Watched" : "Mark Watched"}
+                    Add to Cart
                   </Button>
-                  <Chip
-                    label={movie.watched ? "Watched" : "To Watch"}
-                    color={movie.watched ? "success" : "default"}
-                    icon={<MovieIcon />}
-                    size="small"
-                  />
                 </Box>
+
               </Paper>
             </Grid>
           ))
         )}
       </Grid>
+
     </Box>
   );
 }

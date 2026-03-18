@@ -1,142 +1,133 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  Typography,
+  Button,
+  IconButton,
+  Avatar,
+  Menu,
+  MenuItem
+} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
 
 const pages = [
-  { name: "About Page", path: "/about" },
-  { name: "Dashboard", path: "/homepage" },
+  { name: "Shop", path: "/user/homepage" },
+  { name: "About", path: "/user/about" }
 ];
 
 const settings = [
-  { name: "Profile", path: "/profile" },
-  { name: "Account", path: "/account" },
-  { name: "Logout", path: "/login" },
+  { name: "Profile", path: "/user/profile" },
+  { name: "Account", path: "/user/account" },
+  { name: "Logout", path: "/login" }
 ];
 
-function Topbar() {
+export default function Topbar() {
   const navigate = useNavigate();
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
-
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-
   return (
-    <AppBar position="static">
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
+    <AppBar
+      position="sticky"
+      elevation={0}
+      sx={{
+        backdropFilter: "blur(10px)",
+        background: "rgba(255,255,255,0.7)",
+        borderBottom: "1px solid rgba(0,0,0,0.05)"
+      }}
+    >
+      <Toolbar sx={{ justifyContent: "space-between", px: 4 }}>
 
-          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+        {/* 🔥 LOGO */}
+        <Typography
+          variant="h6"
+          fontWeight={800}
+          sx={{
+            cursor: "pointer",
+            background: "linear-gradient(90deg, #6366f1, #a855f7)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent"
+          }}
+          onClick={() => navigate("/user/homepage")}
+        >
+          CartZen
+        </Typography>
 
-          <Typography
-            variant="h6"
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontWeight: 700,
-              letterSpacing: ".2rem",
-              cursor: "pointer",
-            }}
-            onClick={() => navigate("/dashboard")}
-          >
-            STREAKLY
-          </Typography>
-
-          {/* Mobile Menu */}
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton onClick={handleOpenNavMenu} color="inherit">
-              <MenuIcon />
-            </IconButton>
-
-            <Menu
-              anchorEl={anchorElNav}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
+        {/* 📌 DESKTOP MENU */}
+        <Box sx={{ display: { xs: "none", md: "flex" }, gap: 3 }}>
+          {pages.map((page) => (
+            <Button
+              key={page.name}
+              onClick={() => navigate(page.path)}
+              sx={{
+                color: "#111",
+                fontWeight: 600,
+                position: "relative",
+                "&:hover": {
+                  color: "#6366f1"
+                }
+              }}
             >
-              {pages.map((page) => (
-                <MenuItem
-                  key={page.name}
-                  onClick={() => {
-                    navigate(page.path);
-                    handleCloseNavMenu();
-                  }}
-                >
-                  {page.name}
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+              {page.name}
+            </Button>
+          ))}
+        </Box>
 
-          {/* Desktop Menu */}
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+        {/* 📱 MOBILE MENU */}
+        <Box sx={{ display: { xs: "flex", md: "none" } }}>
+          <IconButton onClick={(e) => setAnchorElNav(e.currentTarget)}>
+            <MenuIcon />
+          </IconButton>
+
+          <Menu
+            anchorEl={anchorElNav}
+            open={Boolean(anchorElNav)}
+            onClose={() => setAnchorElNav(null)}
+          >
             {pages.map((page) => (
-              <Button
+              <MenuItem
                 key={page.name}
-                sx={{ my: 2, color: "white" }}
-                onClick={() => navigate(page.path)}
+                onClick={() => {
+                  navigate(page.path);
+                  setAnchorElNav(null);
+                }}
               >
                 {page.name}
-              </Button>
+              </MenuItem>
             ))}
-          </Box>
+          </Menu>
+        </Box>
 
-          {/* Avatar Menu */}
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu}>
-                <Avatar />
-              </IconButton>
-            </Tooltip>
+        {/* 👤 USER MENU */}
+        <Box>
+          <IconButton onClick={(e) => setAnchorElUser(e.currentTarget)}>
+            <Avatar sx={{ bgcolor: "#6366f1" }} />
+          </IconButton>
 
-            <Menu
-              anchorEl={anchorElUser}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem
-                  key={setting.name}
-                  onClick={() => {
-                    navigate(setting.path);
-                    handleCloseUserMenu();
-                  }}
-                >
-                  {setting.name}
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+          <Menu
+            anchorEl={anchorElUser}
+            open={Boolean(anchorElUser)}
+            onClose={() => setAnchorElUser(null)}
+          >
+            {settings.map((item) => (
+              <MenuItem
+                key={item.name}
+                onClick={() => {
+                  navigate(item.path);
+                  setAnchorElUser(null);
+                }}
+              >
+                {item.name}
+              </MenuItem>
+            ))}
+          </Menu>
+        </Box>
 
-        </Toolbar>
-      </Container>
+      </Toolbar>
     </AppBar>
   );
 }
-
-export default Topbar;

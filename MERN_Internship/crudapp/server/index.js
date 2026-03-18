@@ -32,3 +32,4 @@ app.use(express.json())
 // register API route modules
 app.use('/user', require('./Routes/userRoutes')) // user-related endpoints
 app.use('/product', require('./Routes/productRoutes')) // product-related endpoints
+app.use('/category', require('./Routes/categoryRoutes'));

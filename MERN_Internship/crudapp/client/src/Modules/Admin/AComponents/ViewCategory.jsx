@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -9,188 +9,141 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Button,
-  TextField
-} from "@mui/material"
+  Button
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function ViewCategory() {
-
-  const [categories, setCategories] = useState([])
-  const [editId, setEditId] = useState(null)
-  const [editName, setEditName] = useState("")
+  const [categories, setCategories] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("categories")) || []
-    setCategories(stored)
-  }, [])
+    fetchCategories();
+  }, []);
 
-  const updateStorage = (data) => {
-    localStorage.setItem("categories", JSON.stringify(data))
-  }
+  const fetchCategories = () => {
+    axios.get("http://localhost:3000/category/getCategories")
+      .then(res => setCategories(res.data.categories))
+      .catch(err => console.error(err));
+  };
 
   const handleDelete = (id) => {
-
-  const updatedCategories = categories.filter((cat) => cat.id !== id)
-
-  setCategories(updatedCategories)
-
-  updateStorage(updatedCategories)
-
-  if (editId === id) {
-    setEditId(null)
-    setEditName("")
-  }
-}
-
-  const handleEdit = (cat) => {
-    setEditId(cat.id)
-    setEditName(cat.name)
-  }
-
-  const handleUpdate = (id) => {
-    const updated = categories.map((cat) =>
-      cat.id === id ? { ...cat, name: editName } : cat
-    )
-
-    setCategories(updated)
-    updateStorage(updated)
-    setEditId(null)
-    setEditName("")
-  }
-
-  const handleCancel = () => {
-    setEditId(null)
-    setEditName("")
-  }
+    axios.delete(`http://localhost:3000/category/deleteCategory/${id}`)
+      .then(() => fetchCategories())
+      .catch(err => console.error(err));
+  };
 
   return (
-    <Box>
+    <Box sx={{ p: 4 }}>
 
-      <Typography variant="h4" fontWeight={700} mb={1}>
-        View Categories
-      </Typography>
+      {/* 🔥 HEADER */}
+      <Box mb={3}>
+        <Typography variant="h4" fontWeight={700}>
+          Categories
+        </Typography>
+        <Typography color="text.secondary">
+          Manage your product categories
+        </Typography>
+      </Box>
 
-      <Typography variant="body1" color="text.secondary" mb={4}>
-        All categories listed below
-      </Typography>
-
-      <Paper sx={{ borderRadius: 3 }}>
-
+      {/* 📊 TABLE CARD */}
+      <Paper
+        sx={{
+          borderRadius: 4,
+          overflow: "hidden",
+          boxShadow: "0 10px 30px rgba(0,0,0,0.05)"
+        }}
+      >
         <TableContainer>
-
           <Table>
 
+            {/* 🔵 HEADER */}
             <TableHead>
-              <TableRow sx={{ background: "#667eea" }}>
-                <TableCell sx={{ color: "#fff", fontWeight: 700 }}>#</TableCell>
-                <TableCell sx={{ color: "#fff", fontWeight: 700 }}>
+              <TableRow
+                sx={{
+                  background: "linear-gradient(90deg, #6366f1, #a855f7)"
+                }}
+              >
+                <TableCell sx={{ color: "#fff", fontWeight: 600 }}>
+                  #
+                </TableCell>
+                <TableCell sx={{ color: "#fff", fontWeight: 600 }}>
                   Category Name
                 </TableCell>
-                <TableCell align="center" sx={{ color: "#fff", fontWeight: 700 }}>
+                <TableCell align="center" sx={{ color: "#fff", fontWeight: 600 }}>
                   Actions
                 </TableCell>
               </TableRow>
             </TableHead>
 
+            {/* ⚪ BODY */}
             <TableBody>
-
               {categories.length > 0 ? (
-
                 categories.map((cat, index) => (
-
-                  <TableRow key={cat.id}>
-
+                  <TableRow
+                    key={cat._id}
+                    sx={{
+                      transition: "0.2s",
+                      "&:hover": {
+                        backgroundColor: "#f9fafb"
+                      }
+                    }}
+                  >
                     <TableCell>{index + 1}</TableCell>
-
-                    <TableCell>
-
-                      {editId === cat.id ? (
-
-                        <TextField
-                          size="small"
-                          value={editName}
-                          onChange={(e) => setEditName(e.target.value)}
-                        />
-
-                      ) : (
-
-                        cat.name
-
-                      )}
-
+                    <TableCell sx={{ fontWeight: 500 }}>
+                      {cat.name}
                     </TableCell>
 
                     <TableCell align="center">
+                      <Button
+                        variant="contained"
+                        size="small"
+                        onClick={() =>
+                          navigate(`/admin/category/update/${cat._id}`)
+                        }
+                        sx={{
+                          mr: 1,
+                          background:
+                            "linear-gradient(90deg, #6366f1, #a855f7)",
+                          borderRadius: 2,
+                          textTransform: "none"
+                        }}
+                      >
+                        Update
+                      </Button>
 
-                      {editId === cat.id ? (
-
-                        <>
-                          <Button
-                            size="small"
-                            variant="contained"
-                            onClick={() => handleUpdate(cat.id)}
-                            sx={{ mr: 1 }}
-                          >
-                            Save
-                          </Button>
-
-                          <Button
-                            size="small"
-                            variant="outlined"
-                            onClick={handleCancel}
-                          >
-                            Cancel
-                          </Button>
-                        </>
-
-                      ) : (
-
-                        <>
-                          <Button
-                            size="small"
-                            variant="text"
-                            onClick={() => handleEdit(cat)}
-                            sx={{ mr: 1 }}
-                          >
-                            Update
-                          </Button>
-
-                          <Button
-                            size="small"
-                            color="error"
-                            variant="text"
-                            onClick={() => handleDelete(cat.id)}
-                          >
-                            Delete
-                          </Button>
-                        </>
-
-                      )}
-
+                      <Button
+                        variant="contained"
+                        size="small"
+                        onClick={() => handleDelete(cat._id)}
+                        sx={{
+                          background: "#ef4444",
+                          borderRadius: 2,
+                          textTransform: "none",
+                          "&:hover": { background: "#dc2626" }
+                        }}
+                      >
+                        Delete
+                      </Button>
                     </TableCell>
-
                   </TableRow>
-
                 ))
-
               ) : (
-
                 <TableRow>
-                  <TableCell colSpan={3} align="center">
-                    No categories found
+                  <TableCell colSpan={3} align="center" sx={{ py: 5 }}>
+                    <Typography color="text.secondary">
+                      No categories found
+                    </Typography>
                   </TableCell>
                 </TableRow>
-
               )}
-
             </TableBody>
 
           </Table>
-
         </TableContainer>
-
       </Paper>
 
     </Box>
-  )
+  );
 }

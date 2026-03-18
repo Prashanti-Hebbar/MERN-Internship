@@ -58,17 +58,24 @@ const deleteUserById = async(req,res) => {
     }
 }
 
-const updateUser = async(req, res)=>{
-    try{
-        const {id} = req.params
-        const body = req.body
-        const updatedUser = await userTable.findByIdAndUpdate(id,req.body, {returnDocument: 'after'})
-        console.log(updatedUser)
-        res.status(201).json({message:"User Updates Successfully", userupdate : updatedUser})
-    }catch(error){
-        console.error("Error updating users:", error)
-        res.status(500).json({message: "Server error", error})
-    }
-}
+const updateUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const updatedUser = await userTable.findByIdAndUpdate(
+      id,
+      req.body,
+      { new: true }
+    );
+
+    res.status(200).json({
+      message: "User updated successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error("Error updating user:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
+};
 
 module.exports = { registerUser, getUser, getUserById, deleteUserById, updateUser}

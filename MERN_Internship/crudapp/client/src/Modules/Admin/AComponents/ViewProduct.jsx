@@ -1,103 +1,186 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react";
 import {
-  Box, Typography, Paper, Table, TableBody, TableCell, TableContainer,
-  TableHead, TableRow, IconButton,
-} from '@mui/material'
-import DeleteIcon from '@mui/icons-material/Delete'
+  Box,
+  Typography,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Button
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export default function ViewProduct() {
-  const [products, setProducts] = useState([])
+  const [products, setProducts] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetchProducts()
-  }, [])
+    fetchProducts();
+  }, []);
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch('/product/getProducts')
-      const data = await response.json()
+      const response = await fetch("/product/getProducts");
+      const data = await response.json();
       if (response.ok) {
-        setProducts(data.products)
-      } else {
-        console.error('Failed to fetch products:', data.message)
+        setProducts(data.products);
       }
     } catch (error) {
-      console.error('Error fetching products:', error)
+      console.error(error);
     }
-  }
+  };
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`/product/deleteProductById/${id}`, {
-        method: 'DELETE'
-      })
-      const data = await response.json()
-      if (response.ok) {
-        fetchProducts()
-      } else {
-        console.error('Failed to delete product:', data.message)
-      }
+      await fetch(`/product/deleteProductById/${id}`, {
+        method: "DELETE"
+      });
+      fetchProducts();
     } catch (error) {
-      console.error('Error deleting product:', error)
+      console.error(error);
     }
-  }
+  };
 
   return (
-    <Box>
-      <Typography variant="h4" fontWeight={700} mb={1}>
-        View Products
-      </Typography>
-      <Typography variant="body1" color="text.secondary" mb={4}>
-        All products listed below.
-      </Typography>
+    <Box sx={{ p: 4 }}>
 
-      <Paper elevation={0} sx={{
-        borderRadius: 3,
-        overflow: 'hidden',
-        background: 'rgba(255,255,255,0.9)',
-        backdropFilter: 'blur(10px)',
-        border: '1px solid rgba(0,0,0,0.05)',
-      }}>
+      {/* 🔥 HEADER */}
+      <Box mb={3}>
+        <Typography variant="h4" fontWeight={700}>
+          Products
+        </Typography>
+        <Typography color="text.secondary">
+          Manage your store products
+        </Typography>
+      </Box>
+
+      {/* 📊 TABLE CARD */}
+      <Paper
+        sx={{
+          borderRadius: 4,
+          overflow: "hidden",
+          boxShadow: "0 10px 30px rgba(0,0,0,0.05)"
+        }}
+      >
         <TableContainer>
           <Table>
+
+            {/* 🔵 HEADER */}
             <TableHead>
-              <TableRow sx={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
-                <TableCell sx={{ color: '#fff', fontWeight: 700 }}>#</TableCell>
-                <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Name</TableCell>
-                <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Price</TableCell>
-                <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Quantity</TableCell>
-                <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Description</TableCell>
-                <TableCell sx={{ color: '#fff', fontWeight: 700 }} align="center">Action</TableCell>
+              <TableRow
+                sx={{
+                  background: "linear-gradient(90deg, #6366f1, #a855f7)"
+                }}
+              >
+                <TableCell sx={{ color: "#fff", fontWeight: 600 }}>
+                  #
+                </TableCell>
+                <TableCell sx={{ color: "#fff", fontWeight: 600 }}>
+                  Product Name
+                </TableCell>
+                <TableCell sx={{ color: "#fff", fontWeight: 600 }}>
+                  Price
+                </TableCell>
+                <TableCell sx={{ color: "#fff", fontWeight: 600 }}>
+                  Quantity
+                </TableCell>
+                <TableCell sx={{ color: "#fff", fontWeight: 600 }}>
+                  Description
+                </TableCell>
+                <TableCell align="center" sx={{ color: "#fff", fontWeight: 600 }}>
+                  Actions
+                </TableCell>
               </TableRow>
             </TableHead>
+
+            {/* ⚪ BODY */}
             <TableBody>
-              {products.length > 0 ? products.map((prod, index) => (
-                <TableRow key={prod._id} sx={{
-                  '&:hover': { bgcolor: 'rgba(102,126,234,0.05)' },
-                  transition: 'background 0.2s',
-                }}>
-                  <TableCell>{index + 1}</TableCell>
-                  <TableCell>{prod.name}</TableCell>
-                  <TableCell>${prod.price}</TableCell>
-                  <TableCell>{prod.quantity}</TableCell>
-                  <TableCell>{prod.description}</TableCell>
-                  <TableCell align="center">
-                    <IconButton color="error" onClick={() => handleDelete(prod._id)} size="small">
-                      <DeleteIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              )) : (
+              {products.length > 0 ? (
+                products.map((prod, index) => (
+                  <TableRow
+                    key={prod._id}
+                    sx={{
+                      transition: "0.2s",
+                      "&:hover": {
+                        backgroundColor: "#f9fafb"
+                      }
+                    }}
+                  >
+                    <TableCell>{index + 1}</TableCell>
+
+                    <TableCell sx={{ fontWeight: 500 }}>
+                      {prod.name}
+                    </TableCell>
+
+                    <TableCell sx={{ color: "#6366f1", fontWeight: 600 }}>
+                      ₹{prod.price}
+                    </TableCell>
+
+                    <TableCell>{prod.quantity}</TableCell>
+
+                    <TableCell
+                      sx={{
+                        maxWidth: 200,
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis"
+                      }}
+                    >
+                      {prod.description}
+                    </TableCell>
+
+                    <TableCell align="center">
+                      <Button
+                        variant="contained"
+                        size="small"
+                        onClick={() =>
+                          navigate(`/admin/product/update/${prod._id}`)
+                        }
+                        sx={{
+                          mr: 1,
+                          background:
+                            "linear-gradient(90deg, #6366f1, #a855f7)",
+                          borderRadius: 2,
+                          textTransform: "none"
+                        }}
+                      >
+                        Update
+                      </Button>
+
+                      <Button
+                        variant="contained"
+                        size="small"
+                        onClick={() => handleDelete(prod._id)}
+                        sx={{
+                          background: "#ef4444",
+                          borderRadius: 2,
+                          textTransform: "none",
+                          "&:hover": { background: "#dc2626" }
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
                 <TableRow>
-                  <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
-                    <Typography color="text.secondary">No products found</Typography>
+                  <TableCell colSpan={6} align="center" sx={{ py: 5 }}>
+                    <Typography color="text.secondary">
+                      No products found
+                    </Typography>
                   </TableCell>
                 </TableRow>
               )}
             </TableBody>
+
           </Table>
         </TableContainer>
       </Paper>
+
     </Box>
-  )
+  );
 }

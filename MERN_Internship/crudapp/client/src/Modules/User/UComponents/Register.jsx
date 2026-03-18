@@ -9,6 +9,7 @@ import {
   Box,
 } from "@mui/material";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
   const [formdata, setFormdata] = useState({
@@ -18,6 +19,8 @@ export default function Register() {
     phone: "",
     address: "",
   });
+  
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormdata({ ...formdata, [e.target.name]: e.target.value });
@@ -31,6 +34,10 @@ export default function Register() {
       .then((res) => {
         console.log("registered user :", res.data.u);
         alert("Registration successful!");
+        setTimeout(() => {
+        navigate("/login");
+      }, 100);
+        
       })
       .catch((error) => {
         console.log(error);
@@ -44,7 +51,7 @@ export default function Register() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        background: "linear-gradient(135deg,#1e3c72,#2a5298)",
+        // background: "linear-gradient(135deg,#1e3c72,#2a5298)",
       }}
     >
       <Paper

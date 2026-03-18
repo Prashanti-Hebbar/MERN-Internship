@@ -9,9 +9,9 @@ import {
   Box
 } from "@mui/material";
 
-import img1 from "./img1.jpg";
-import img2 from "./img2.jpg";
-import img3 from "./img3.jpg";
+// import img1 from "./img1.jpg";
+// import img2 from "./img2.jpg";
+// import img3 from "./img3.jpg";
 
 export default function Login() {
   const [formdata, setFormdata] = useState({
@@ -19,17 +19,17 @@ export default function Login() {
     password: "",
   });
 
-  const images = [img1, img2, img3];
+  // const images = [img1, img2, img3];
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Image slider (3 seconds)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % images.length);
-    }, 3000);
+  // // Image slider (3 seconds)
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setCurrentIndex((prev) => (prev + 1) % images.length);
+  //   }, 3000);
 
-    return () => clearInterval(interval);
-  }, [images.length]);
+  //   return () => clearInterval(interval);
+  // }, [images.length]);
 
   const handleChange = (e) => {
     setFormdata({ ...formdata, [e.target.name]: e.target.value });
@@ -66,8 +66,8 @@ export default function Login() {
       <Paper
         elevation={6}
         sx={{
-          width: "1100px",
-          height: "700px",
+          width: "500px",
+          height: "400px",
           display: "flex",
           borderRadius: 3,
           overflow: "hidden",
@@ -109,10 +109,10 @@ export default function Login() {
             onChange={handleChange}
           />
 
-          <FormControlLabel
+          {/* <FormControlLabel
             control={<Checkbox />}
             label="Remember me"
-          />
+          /> */}
 
           <Button
             variant="contained"
@@ -144,7 +144,7 @@ export default function Login() {
         </Box>
 
         {/* RIGHT IMAGE SLIDER */}
-        <Box sx={{ flex: 1 }}>
+        {/* <Box sx={{ flex: 1 }}>
           <img
             src={images[currentIndex]}
             alt="slide"
@@ -154,7 +154,7 @@ export default function Login() {
               objectFit: "cover",
             }}
           />
-        </Box>
+        </Box> */}
       </Paper>
     </Box>
   );
