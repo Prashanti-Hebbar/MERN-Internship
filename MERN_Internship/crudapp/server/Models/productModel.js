@@ -8,7 +8,10 @@ const productSchema = new mongoose.Schema({
   categoryId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "category"
-  }
+  },
+  productimage: {type:String}
+},{
+  timestamps: true
 });
 
 module.exports = mongoose.model("Product", productSchema);

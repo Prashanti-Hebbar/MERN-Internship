@@ -21,11 +21,13 @@ export default function AddProduct() {
     quantity: "",
     description: "",
     categoryId: "",
+    productimage: "",
   });
 
   const [category, setCategory] = useState([]);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+  
 
   useEffect(() => {
     axios
@@ -33,7 +35,7 @@ export default function AddProduct() {
       .then((res) => {
         console.log("API:", res.data);
 
-        setCategory(res.data.categories); // 🔥 FIXED
+        setCategory(res.data.categories); 
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);
@@ -42,31 +44,35 @@ export default function AddProduct() {
   }, []);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (e.target.name === "productimage") {
+      setFormData({
+        ...formData,
+        productimage: e.target.files[0],
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [e.target.name]: e.target.value,
+      });
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-    setSuccess(false);
-
-    if (
-      !formData.name.trim() ||
-      !formData.price ||
-      !formData.quantity ||
-      !formData.description.trim()
-    ) {
-      setError("All fields are required");
-      return;
-    }
+    const form = new FormData();
+    form.append("name", formData.name);
+    form.append("price", formData.price);
+    form.append("quantity", formData.quantity);
+    form.append("description", formData.description);
+    form.append("categoryId", formData.categoryId);
+    form.append("productimage", formData.productimage);
 
     try {
       const response = await fetch(
         "http://localhost:3000/product/createProduct",
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
+          body: form
         },
       );
 
@@ -171,6 +177,16 @@ export default function AddProduct() {
             value={formData.quantity}
             onChange={handleChange}
             sx={{ mb: 2 }}
+          />
+
+          <TextField
+            fullWidth
+            label="Product Image"
+            name="productimage"
+            type="file"
+            onChange={handleChange}
+            sx={{ mb: 2 }}
+            InputLabelProps={{shrink:true}}
           />
 
           <TextField

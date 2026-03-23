@@ -10,3 +10,6 @@ mongoose - handles database connection
 cors - (cross origin resource sharing) used for the security purpose
 nodemon - this command is used to run the server, here server runs whenever there is changes in the file 
 
+multer - npm install multer
+it is a middleware for handling file/image uploads
+

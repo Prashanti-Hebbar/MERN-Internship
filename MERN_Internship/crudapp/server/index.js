@@ -33,3 +33,5 @@ app.use(express.json())
 app.use('/user', require('./Routes/userRoutes')) // user-related endpoints
 app.use('/product', require('./Routes/productRoutes')) // product-related endpoints
 app.use('/category', require('./Routes/categoryRoutes'));
+
+app.use('/image', express.static('./Uploads')) // serve uploaded images from the 'Uploads' directory
