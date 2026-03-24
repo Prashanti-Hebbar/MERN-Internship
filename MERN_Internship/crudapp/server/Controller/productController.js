@@ -56,31 +56,46 @@ const deleteProductById = async (req, res) => {
 };
 
 const updateProduct = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const body = req.body;
-        console.log("update request body", body);
+  try {
+    const { id } = req.params;
 
-        if (!id || !id.match(/^[0-9a-fA-F]{24}$/)) {
-            return res.status(400).json({ message: "Invalid or missing product id" });
-        }
-
-        const updatedProduct = await productTable.findByIdAndUpdate(
-            id,
-            body,
-            { new: true, runValidators: true }
-        );
-
-        if (!updatedProduct) {
-            return res.status(404).json({ message: "Product not found" });
-        }
-
-        console.log("updatedProduct", updatedProduct);
-        res.status(200).json({ message: "Product updated successfully", product: updatedProduct });
-    } catch (error) {
-        console.error("Error updating product:", error);
-        res.status(500).json({ message: "Server error", error });
+    if (!id || !id.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({ message: "Invalid product id" });
     }
+
+    //  Build update object manually
+    const updateData = {
+      name: req.body.name,
+      price: req.body.price,
+      quantity: req.body.quantity,
+      description: req.body.description,
+      categoryId: req.body.categoryId,
+    };
+
+    // ✅ Handle image update ONLY if new file is uploaded
+    if (req.file) {
+      updateData.productimage = req.file.filename;
+    }
+
+    const updatedProduct = await productTable.findByIdAndUpdate(
+      id,
+      updateData,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedProduct) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    res.status(200).json({
+      message: "Product updated successfully",
+      product: updatedProduct,
+    });
+
+  } catch (error) {
+    console.error("UPDATE ERROR:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
 };
 
 module.exports = { createProduct, getProducts, getProductById, deleteProductById, updateProduct };

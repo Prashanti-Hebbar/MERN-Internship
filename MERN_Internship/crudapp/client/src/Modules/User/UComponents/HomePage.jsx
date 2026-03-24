@@ -6,7 +6,11 @@ import {
   Paper,
   Button,
   TextField,
-  Chip
+  Chip,
+  Card,
+  CardMedia,
+  CardContent,
+  CardActions,
 } from "@mui/material";
 import axios from "axios";
 
@@ -20,24 +24,24 @@ export default function ShopPage() {
   }, []);
 
   const fetchProducts = () => {
-    axios.get("http://localhost:3000/product/getProducts")
-      .then(res => {
+    axios
+      .get("http://localhost:3000/product/getProducts")
+      .then((res) => {
         setProducts(res.data.products);
       })
-      .catch(err => console.error(err));
+      .catch((err) => console.error(err));
   };
 
   const addToCart = (product) => {
     setCart([...cart, product]);
   };
 
-  const filteredProducts = products.filter(p =>
-    p.name.toLowerCase().includes(search.toLowerCase())
+  const filteredProducts = products.filter((p) =>
+    p.name.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
     <Box sx={{ p: 4, background: "#f5f7fa", minHeight: "100vh" }}>
-
       {/* 🔥 HEADER */}
       <Box mb={4}>
         <Typography variant="h4" fontWeight={700}>
@@ -64,7 +68,7 @@ export default function ShopPage() {
           label={`Cart: ${cart.length} items`}
           sx={{
             background: "linear-gradient(90deg, #6366f1, #a855f7)",
-            color: "white"
+            color: "white",
           }}
         />
       </Box>
@@ -75,40 +79,87 @@ export default function ShopPage() {
           <Typography>No products found</Typography>
         ) : (
           filteredProducts.map((product) => (
-            <Grid item xs={12} sm={6} md={4} key={product._id}>
-              <Paper sx={{ p: 3, borderRadius: 3 }}>
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              md={4}
+              key={product._id}
+              sx={{ display: "flex" }}
+            >
+              <Card
+                sx={{
+                  borderRadius: 3,
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  transition: "0.3s",
+                  width: "100%",
+                  "&:hover": {
+                    boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
+                    transform: "translateY(-5px)",
+                  },
+                }}
+              >
+                {/* 🔥 IMAGE */}
+                <CardMedia
+                  component="img"
+                  image={
+                    product.productimage
+                      ? `http://localhost:3000/uploads/${product.productimage}`
+                      : "https://via.placeholder.com/300x180"
+                  }
+                  alt={product.name}
+                  sx={{
+                    height: 180,
+                    objectFit: "cover", // 🔥 prevents distortion
+                  }}
+                />
 
-                <Typography fontWeight={700}>
-                  {product.name}
-                </Typography>
+                {/* 🔹 CONTENT */}
+                <CardContent sx={{ flexGrow: 1 }}>
+                  <Typography variant="h6" fontWeight={700}>
+                    {product.name}
+                  </Typography>
 
-                <Typography color="text.secondary" mt={1}>
-                  ₹{product.price}
-                </Typography>
+                  <Typography color="primary" fontWeight={600} mt={1}>
+                    ₹{product.price}
+                  </Typography>
 
-                <Typography variant="body2" mt={1}>
-                  {product.description}
-                </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    mt={1}
+                    sx={{
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                    }}
+                  >
+                    {product.description}
+                  </Typography>
+                </CardContent>
 
-                <Box mt={2}>
+                {/* 🔹 ACTION */}
+                <CardActions sx={{ mt: "auto" }}>
                   <Button
-                    variant="contained"
                     fullWidth
+                    variant="contained"
                     onClick={() => addToCart(product)}
                     sx={{
-                      background: "linear-gradient(90deg, #6366f1, #a855f7)"
+                      borderRadius: 2,
+                      background: "linear-gradient(90deg, #6366f1, #a855f7)",
                     }}
                   >
                     Add to Cart
                   </Button>
-                </Box>
-
-              </Paper>
+                </CardActions>
+              </Card>
             </Grid>
           ))
         )}
       </Grid>
-
     </Box>
   );
 }

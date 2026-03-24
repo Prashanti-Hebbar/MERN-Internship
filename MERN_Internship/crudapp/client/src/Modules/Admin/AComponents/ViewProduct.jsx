@@ -9,7 +9,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Button
+  Button,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
@@ -36,7 +36,7 @@ export default function ViewProduct() {
   const handleDelete = async (id) => {
     try {
       await fetch(`/product/deleteProductById/${id}`, {
-        method: "DELETE"
+        method: "DELETE",
       });
       fetchProducts();
     } catch (error) {
@@ -46,7 +46,6 @@ export default function ViewProduct() {
 
   return (
     <Box sx={{ p: 4 }}>
-
       {/* 🔥 HEADER */}
       <Box mb={3}>
         <Typography variant="h4" fontWeight={700}>
@@ -62,22 +61,19 @@ export default function ViewProduct() {
         sx={{
           borderRadius: 4,
           overflow: "hidden",
-          boxShadow: "0 10px 30px rgba(0,0,0,0.05)"
+          boxShadow: "0 10px 30px rgba(0,0,0,0.05)",
         }}
       >
         <TableContainer>
           <Table>
-
             {/* 🔵 HEADER */}
             <TableHead>
               <TableRow
                 sx={{
-                  background: "linear-gradient(90deg, #6366f1, #a855f7)"
+                  background: "linear-gradient(90deg, #6366f1, #a855f7)",
                 }}
               >
-                <TableCell sx={{ color: "#fff", fontWeight: 600 }}>
-                  #
-                </TableCell>
+                <TableCell sx={{ color: "#fff", fontWeight: 600 }}>#</TableCell>
                 <TableCell sx={{ color: "#fff", fontWeight: 600 }}>
                   Product Name
                 </TableCell>
@@ -90,7 +86,13 @@ export default function ViewProduct() {
                 <TableCell sx={{ color: "#fff", fontWeight: 600 }}>
                   Description
                 </TableCell>
-                <TableCell align="center" sx={{ color: "#fff", fontWeight: 600 }}>
+                <TableCell sx={{ color: "#fff", fontWeight: 600 }}>
+                  Image
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{ color: "#fff", fontWeight: 600 }}
+                >
                   Actions
                 </TableCell>
               </TableRow>
@@ -105,15 +107,13 @@ export default function ViewProduct() {
                     sx={{
                       transition: "0.2s",
                       "&:hover": {
-                        backgroundColor: "#f9fafb"
-                      }
+                        backgroundColor: "#f9fafb",
+                      },
                     }}
                   >
                     <TableCell>{index + 1}</TableCell>
 
-                    <TableCell sx={{ fontWeight: 500 }}>
-                      {prod.name}
-                    </TableCell>
+                    <TableCell sx={{ fontWeight: 500 }}>{prod.name}</TableCell>
 
                     <TableCell sx={{ color: "#6366f1", fontWeight: 600 }}>
                       ₹{prod.price}
@@ -126,10 +126,26 @@ export default function ViewProduct() {
                         maxWidth: 200,
                         whiteSpace: "nowrap",
                         overflow: "hidden",
-                        textOverflow: "ellipsis"
+                        textOverflow: "ellipsis",
                       }}
                     >
                       {prod.description}
+                    </TableCell>
+                    <TableCell>
+                      {prod.productimage ? (
+                        <img
+                          src={`http://localhost:3000/uploads/${prod.productimage}`}
+                          alt={prod.name}
+                          style={{
+                            width: "60px",
+                            height: "60px",
+                            objectFit: "cover",
+                            borderRadius: "8px",
+                          }}
+                        />
+                      ) : (
+                        "No Image"
+                      )}
                     </TableCell>
 
                     <TableCell align="center">
@@ -144,7 +160,7 @@ export default function ViewProduct() {
                           background:
                             "linear-gradient(90deg, #6366f1, #a855f7)",
                           borderRadius: 2,
-                          textTransform: "none"
+                          textTransform: "none",
                         }}
                       >
                         Update
@@ -158,7 +174,7 @@ export default function ViewProduct() {
                           background: "#ef4444",
                           borderRadius: 2,
                           textTransform: "none",
-                          "&:hover": { background: "#dc2626" }
+                          "&:hover": { background: "#dc2626" },
                         }}
                       >
                         Delete
@@ -176,11 +192,9 @@ export default function ViewProduct() {
                 </TableRow>
               )}
             </TableBody>
-
           </Table>
         </TableContainer>
       </Paper>
-
     </Box>
   );
 }
