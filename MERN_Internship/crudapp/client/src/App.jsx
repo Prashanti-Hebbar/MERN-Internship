@@ -1,9 +1,11 @@
 import React from 'react'
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import UserRoute from './Modules/User/URoutes/UserRoute'
 import AdminRoute from './Modules/Admin/ARoutes/AdminRoute'
 import Login from './Modules/User/UComponents/Login'
 import Register from './Modules/User/UComponents/Register'
+
+
 
 export default function App() {
   return (
