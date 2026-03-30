@@ -4,7 +4,7 @@ const { createProduct, getProducts, getProductById, deleteProductById, updatePro
 const route = express.Router();
 const upload = require('../Middleware/imageUpload');
 
-route.post('/createProduct', createProduct);
+route.post('/createProduct', upload.single('productimage'), createProduct);
 route.get('/getProducts', getProducts);
 route.get('/getProductById/:id', getProductById);
 route.delete('/deleteProductById/:id', deleteProductById);

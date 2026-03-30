@@ -16,7 +16,7 @@ import axios from "axios";
 // import img3 from "./img3.jpg";
 
 export default function Login() {
-  const [formdata, setFormdata] = useState({
+  const [login, setLogin] = useState({
     email: "",
     password: "",
   });
@@ -35,21 +35,26 @@ export default function Login() {
   // }, [images.length]);
 
   const handleChange = (e) => {
-    setFormdata({ ...formdata, [e.target.name]: e.target.value });
+    setLogin({ ...login, [e.target.name]: e.target.value });
+    console.log({ ...login, [e.target.name]: e.target.value });
   };
 
   const handleLogin = () => {
+    console.log("logindetails", login);
     axios
-      .post("http://localhost:3000/user/loginUser", formdata)
+      .post("http://localhost:3000/user/login", login)
       .then((res) => {
-        alert("Login successful!");
-
-        // optional: store user
-        localStorage.setItem("user", JSON.stringify(res.data.user));
-
-        navigate("/");
+        console.log(res);
+        if (res.data.success) {
+          localStorage.setItem("UserToken", res.data.token);
+          alert("Login Successfull!");
+          navigate("/");
+        } else{
+          alert("unsuccessfull")
+        }
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log(error);
         alert("Invalid email or password");
       });
   };

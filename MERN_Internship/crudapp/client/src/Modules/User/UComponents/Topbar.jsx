@@ -14,7 +14,7 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 
 const pages = [
-  { name: "Shop", path: "/user/homepage" },
+  { name: "Shop", path: "/user" },
   { name: "About", path: "/user/about" },
   { name: "Products", path: "/user/products" }
 ];

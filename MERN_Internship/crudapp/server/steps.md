@@ -13,3 +13,5 @@ nodemon - this command is used to run the server, here server runs whenever ther
 multer - npm install multer
 it is a middleware for handling file/image uploads
 
+jwt json web token - npm i jsonwebtoken
+it is used for secure authentication and authorization
