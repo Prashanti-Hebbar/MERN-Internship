@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Typography,
   Paper,
@@ -11,43 +11,36 @@ import {
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-export default function Register() {
+export default function MyProfile() {
   const [formdata, setFormdata] = useState({
     name: "",
     email: "",
-    password: "",
     phone: "",
     address: "",
   });
-
+  
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormdata({ ...formdata, [e.target.name]: e.target.value });
   };
 
-  const handleregister = () => {
-    console.log("Form data:", formdata);
-
-    axios
-      .post("http://localhost:3000/user/registerUser", formdata)
-      .then((res) => {
-        if (res.data.message === "email already exists") {
-          alert("Email already exists");
-          return;
+  const token = localStorage.getItem("UserToken")
+  console.log("usertoken details", token)
+  const viewprofile = async(req,res)=>{
+        try {
+            const response = await fetch("http://localhost:3000/user/getprofile", {method:"GET",headers:{"auth-token":token}})
+            // axios.get("http://localhost:3000/user/getprofile", {headers:{"auth-token":token}})
+          const details = await response.json()
+          console.log(details.udata)
+        //   setFormdata(details.udata)
+        } catch(error) {
+            console.log(error)
         }
-
-        alert("Registration successful!");
-        navigate("/login");
-      })
-      .catch((error) => {
-        if (error.response) {
-          alert(error.response.data.message);
-        } else {
-          alert("Something went wrong");
-        }
-      });
-  };
+    }
+  useEffect(() => {
+    viewprofile();
+  })
 
   return (
     <Box
@@ -67,8 +60,13 @@ export default function Register() {
           borderRadius: 4,
         }}
       >
-        <Typography variant="h4" fontWeight={700} textAlign="center" mb={3}>
-          Registration
+        <Typography
+          variant="h4"
+          fontWeight={700}
+          textAlign="center"
+          mb={3}
+        >
+          Update Profile
         </Typography>
 
         <TextField
@@ -77,6 +75,7 @@ export default function Register() {
           fullWidth
           margin="normal"
           onChange={handleChange}
+          value={formdata.name}
         />
 
         <TextField
@@ -85,15 +84,7 @@ export default function Register() {
           fullWidth
           margin="normal"
           onChange={handleChange}
-        />
-
-        <TextField
-          label="Password"
-          name="password"
-          type="password"
-          fullWidth
-          margin="normal"
-          onChange={handleChange}
+          value={formdata.email}
         />
 
         <TextField
@@ -102,6 +93,7 @@ export default function Register() {
           fullWidth
           margin="normal"
           onChange={handleChange}
+          value={formdata.phone}
         />
 
         <TextField
@@ -110,6 +102,7 @@ export default function Register() {
           fullWidth
           margin="normal"
           onChange={handleChange}
+          value={formdata.address}
         />
 
         {/* <FormControlLabel
@@ -135,24 +128,10 @@ export default function Register() {
             background: "#1c1c1c",
             "&:hover": { background: "#000" },
           }}
-          onClick={handleregister}
+        //   onClick={handleregister}
         >
-          Register
+          Update
         </Button>
-
-        <Typography variant="body2" textAlign="center" sx={{ mt: 3 }}>
-          Already have an account?{" "}
-          <span
-            style={{
-              color: "#1976d2",
-              cursor: "pointer",
-              fontWeight: 500,
-            }}
-            onClick={() => (window.location.href = "/login")}
-          >
-            Login
-          </span>
-        </Typography>
       </Paper>
     </Box>
   );

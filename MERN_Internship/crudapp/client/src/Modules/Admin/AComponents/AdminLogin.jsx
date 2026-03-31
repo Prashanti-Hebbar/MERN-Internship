@@ -1,80 +1,83 @@
 import React, { useState } from 'react'
+import axios from 'axios'
+import {
+  Box, TextField, Button, Typography,
+  Paper, Alert
+} from '@mui/material'
 import { useNavigate } from 'react-router-dom'
-import { Box, TextField, Button, Typography, Paper, Alert, Avatar } from '@mui/material'
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 
 export default function AdminLogin() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [login, setLogin] = useState({
+    email: '',
+    password: ''
+  })
+
   const [error, setError] = useState('')
   const navigate = useNavigate()
 
-  const handleLogin = (e) => {
-    e.preventDefault()
-    setError('')
+  const handleChange = (e) => {
+    setLogin({ ...login, [e.target.name]: e.target.value })
+  }
 
-    if (email === 'admin@gmail.com' && password === 'Admin@123') {
-      localStorage.setItem('adminLoggedIn', JSON.stringify({ email, role: 'admin' }))
-      navigate('/admin/dashboard')
-    } else {
-      setError('Invalid email or password')
-    }
+  const handleLogin = () => {
+    axios.post("http://localhost:3000/admin/login", login)
+      .then((res) => {
+        if (res.data.success) {
+          localStorage.setItem("AdminToken", res.data.token)
+          alert("Admin Login Successful!")
+          navigate("/admin")
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+        setError("Invalid admin credentials")
+      })
   }
 
   return (
     <Box sx={{
-      minHeight: '100vh',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      height: "100vh",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: "#f2f2f2"
     }}>
-      <Paper elevation={10} sx={{
-        p: 5,
-        width: 400,
-        borderRadius: 4,
-        background: 'rgba(255,255,255,0.95)',
-        backdropFilter: 'blur(10px)',
-        textAlign: 'center',
+      <Paper elevation={6} sx={{
+        width: "400px",
+        p: 4,
+        borderRadius: 3
       }}>
-        <Avatar sx={{
-          m: 'auto', mb: 2,
-          bgcolor: '#764ba2',
-          width: 56, height: 56,
-        }}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography variant="h5" fontWeight={700} mb={1}>
+        <Typography variant="h4" textAlign="center" mb={3}>
           Admin Login
         </Typography>
-        <Typography variant="body2" color="text.secondary" mb={3}>
-          Sign in to access the admin panel
-        </Typography>
 
-        {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+        {error && <Alert severity="error">{error}</Alert>}
 
-        <form onSubmit={handleLogin}>
-          <TextField
-            fullWidth label="Email" type="email" variant="outlined"
-            value={email} onChange={(e) => setEmail(e.target.value)}
-            required sx={{ mb: 2 }}
-          />
-          <TextField
-            fullWidth label="Password" type="password" variant="outlined"
-            value={password} onChange={(e) => setPassword(e.target.value)}
-            required sx={{ mb: 3 }}
-          />
-          <Button
-            type="submit" fullWidth variant="contained" size="large"
-            sx={{
-              py: 1.5, borderRadius: 3, fontWeight: 700, fontSize: '1rem',
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              '&:hover': { background: 'linear-gradient(135deg, #5a6fd6 0%, #6a4190 100%)' },
-            }}
-          >
-            Sign In
-          </Button>
-        </form>
+        <TextField
+          label="Email"
+          name="email"
+          fullWidth
+          margin="normal"
+          onChange={handleChange}
+        />
+
+        <TextField
+          label="Password"
+          name="password"
+          type="password"
+          fullWidth
+          margin="normal"
+          onChange={handleChange}
+        />
+
+        <Button
+          fullWidth
+          variant="contained"
+          sx={{ mt: 2 }}
+          onClick={handleLogin}
+        >
+          Login
+        </Button>
       </Paper>
     </Box>
   )

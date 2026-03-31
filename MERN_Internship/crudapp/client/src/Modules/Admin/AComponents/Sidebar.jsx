@@ -51,7 +51,7 @@ export default function Sidebar() {
   const [categoryOpen, setCategoryOpen] = useState(false)
 
   const handleLogout = () => {
-    localStorage.removeItem("adminLoggedIn")
+    localStorage.removeItem("AdminToken")
     navigate("/admin/login")
   }
 
