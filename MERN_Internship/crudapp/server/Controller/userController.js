@@ -107,6 +107,27 @@ const getprofile = async (req, res) => {
   }
 };
 
+const updateProfile = async (req, res) => {
+  try {
+    const { name, email, phone, address } = req.body;
+
+    const updatedUser = await userTable.findByIdAndUpdate(
+      req.userid, // ✅ from token middleware
+      { name, email, phone, address },
+      { new: true }
+    );
+
+    res.json({
+      success: true,
+      message: "Profile updated successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "server error" });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -114,5 +135,6 @@ module.exports = {
   getUserById,
   deleteUserById,
   updateUser,
-  getprofile
+  getprofile,
+  updateProfile
 };

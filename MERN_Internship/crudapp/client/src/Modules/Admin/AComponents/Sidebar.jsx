@@ -52,6 +52,7 @@ export default function Sidebar() {
 
   const handleLogout = () => {
     localStorage.removeItem("AdminToken")
+    alert("Logged out successfully!")
     navigate("/admin/login")
   }
 

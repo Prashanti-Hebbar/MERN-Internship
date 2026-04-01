@@ -1,5 +1,5 @@
 const express = require('express');
-const {registerUser, loginUser,  getUser, getUserById, deleteUserById, updateUser, getprofile} = require('../Controller/userController');
+const {registerUser, loginUser,  getUser, getUserById, deleteUserById, updateUser, getprofile, updateProfile} = require('../Controller/userController');
 const auth = require("../Middleware/Auth")
 
 const route = express.Router();
@@ -11,6 +11,7 @@ route.get('/getUserById/:id', getUserById); // we are using :id to get the user 
 route.delete('/deleteUserById/:id', deleteUserById) // we are using :id to delete the user by id from the database
 route.put('/updateuser/:id', updateUser) // we are using :id to update the user by id from the database
 route.get('/getprofile',auth, getprofile)
+route.put('/updateprofile',auth, updateProfile)
 
 // export the configured router so it can be used by the main application
 module.exports = route;

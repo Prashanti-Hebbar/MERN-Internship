@@ -18,29 +18,52 @@ export default function MyProfile() {
     phone: "",
     address: "",
   });
-  
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormdata({ ...formdata, [e.target.name]: e.target.value });
   };
 
-  const token = localStorage.getItem("UserToken")
-  console.log("usertoken details", token)
-  const viewprofile = async(req,res)=>{
-        try {
-            const response = await fetch("http://localhost:3000/user/getprofile", {method:"GET",headers:{"auth-token":token}})
-            // axios.get("http://localhost:3000/user/getprofile", {headers:{"auth-token":token}})
-          const details = await response.json()
-          console.log(details.udata)
-        //   setFormdata(details.udata)
-        } catch(error) {
-            console.log(error)
-        }
+  const token = localStorage.getItem("UserToken");
+  console.log("usertoken details", token);
+  const viewprofile = async (req, res) => {
+    try {
+      const response = await fetch("http://localhost:3000/user/getprofile", {
+        method: "GET",
+        headers: { "auth-token": token },
+      });
+      // axios.get("http://localhost:3000/user/getprofile", {headers:{"auth-token":token}})
+      const details = await response.json();
+      console.log(details.udata);
+      setFormdata(details.udata);
+    } catch (error) {
+      console.log(error);
     }
+  };
   useEffect(() => {
     viewprofile();
-  })
+  }, []);
+
+  const handleUpdate = async() => {
+    try {
+      const response = await axios.put(
+        "http://localhost:3000/user/updateprofile",
+        formdata,
+        {
+          headers: {
+            "auth-token": token
+          },
+        },
+      );
+      
+      alert("Profile updated successfully");
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+      alert("Failed to update profile");
+    }
+  };
 
   return (
     <Box
@@ -60,12 +83,7 @@ export default function MyProfile() {
           borderRadius: 4,
         }}
       >
-        <Typography
-          variant="h4"
-          fontWeight={700}
-          textAlign="center"
-          mb={3}
-        >
+        <Typography variant="h4" fontWeight={700} textAlign="center" mb={3}>
           Update Profile
         </Typography>
 
@@ -105,17 +123,6 @@ export default function MyProfile() {
           value={formdata.address}
         />
 
-        {/* <FormControlLabel
-          control={<Checkbox />}
-          label={
-            <Typography variant="body2">
-              I agree to the{" "}
-              <span style={{ color: "#1976d2", fontWeight: 500 }}>
-                terms and conditions
-              </span>
-            </Typography>
-          }
-        /> */}
 
         <Button
           variant="contained"
@@ -128,7 +135,7 @@ export default function MyProfile() {
             background: "#1c1c1c",
             "&:hover": { background: "#000" },
           }}
-        //   onClick={handleregister}
+          onClick={handleUpdate}
         >
           Update
         </Button>
