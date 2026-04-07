@@ -19,7 +19,7 @@ export default function MyProfile() {
     address: "",
   });
 
-  const navigate = useNavigate();
+  const navigate =useNavigate();
 
   const handleChange = (e) => {
     setFormdata({ ...formdata, [e.target.name]: e.target.value });
@@ -28,7 +28,7 @@ export default function MyProfile() {
   const token = localStorage.getItem("UserToken");
   console.log("usertoken details", token);
   const viewprofile = async (req, res) => {
-    try {
+    try { 
       const response = await fetch("http://localhost:3000/user/getprofile", {
         method: "GET",
         headers: { "auth-token": token },

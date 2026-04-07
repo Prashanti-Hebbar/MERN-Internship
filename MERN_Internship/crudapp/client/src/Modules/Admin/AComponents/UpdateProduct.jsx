@@ -124,6 +124,7 @@ export default function UpdateProduct() {
             sx={{ mb: 2 }}
             InputLabelProps={{ shrink: true }}
           />
+          <img src={`http://localhost:3000/uploads/${product.productimage}`} alt="Current" width={150} />
 
           <TextField
             label="Description"

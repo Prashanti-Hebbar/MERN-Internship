@@ -20,16 +20,26 @@ const pages = [
 ];
 
 const isLoggedIn = !!localStorage.getItem("UserToken");
-const settings = isLoggedIn
-  ? [
-      { name: "Profile", path: "/user/myprofile" },
-      { name: "Account", path: "/user/account" },
-      { name: "Logout", path: "/login" },
-    ]
-  : [
-      { name: "Login", path: "/login" },
-      { name: "Register", path: "/register" },
-    ];
+// const settings = isLoggedIn
+//   ? [
+//       { name: "Profile", path: "/user/myprofile" },
+//       { name: "Account", path: "/user/account" },
+//       { name: "Logout", path: "/login" },
+//     ]
+//   : [
+//       { name: "Login", path: "/login" },
+//       { name: "Register", path: "/register" },
+//     ];
+
+const token = localStorage.getItem("UserToken")
+console.log(token)
+const settings = token ? [
+  { name: "Profile", path: "/user/myprofile" },
+  { name: "Logout", path: "/login" },
+] : [
+  { name: "Login", path: "/login" },
+  { name: "Register", path: "/register" },
+]
 
 export default function Topbar() {
   const navigate = useNavigate();
@@ -71,7 +81,7 @@ export default function Topbar() {
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
           }}
-          onClick={() => navigate("/user/homepage")}
+          onClick={() => navigate("/user")}
         >
           CartZen
         </Typography>
