@@ -33,7 +33,7 @@ const loginUser = async (req, res) => {
     if (!user) {
       res.status(404).json({ success: false, message: "login failed", user });
     } else {
-      const token = await jwt.sign(user.id, SECRET_KEY);
+      const token = await jwt.sign({ id: user._id }, SECRET_KEY);
       res.json({ success: true, message: "Login Successfull!", token });
     }
   } catch (error) {

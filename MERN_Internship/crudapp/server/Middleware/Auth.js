@@ -1,21 +1,27 @@
 const jwt = require("jsonwebtoken")
 const SECRET_KEY = "product-crud"
 
-const authuser = async(req,res,next) => {
-    try{
-        const usertoken = await req.header("auth-token")
-        if(usertoken){
-            const userinfo = await jwt.verify(usertoken, SECRET_KEY)
-            console.log(userinfo)
-            req.userid = userinfo;
-            next();
-        } else{
-            res.json({success:false, message:"unauthorized user token"})
-        }
-    } catch (error) {
-        console.log(error);
-        res.json({success:false,message:"server error"})
+const authuser = (req, res, next) => {
+  try {
+    const usertoken = req.header("auth-token");
+
+    if (!usertoken) {
+      return res.status(401).json({
+        message: "No token, unauthorized",
+      });
     }
-}
+
+    const userinfo = jwt.verify(usertoken, "product-crud");
+
+    req.userid = userinfo.id;
+
+    next();
+  } catch (error) {
+    console.log(error);
+    return res.status(401).json({
+      message: "Invalid token",
+    });
+  }
+};
 
 module.exports = authuser

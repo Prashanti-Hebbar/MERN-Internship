@@ -136,25 +136,28 @@ export default function Products() {
             </Typography>
           </CardContent>
           <CardActions disableSpacing>
-            <IconButton aria-label="add to favorites">
+            <Button 
+            onClick={() => { console.log("clicked", pdata._id); navigate(`/user/bookingform/${pdata._id}`)}}
+            size="small" variant="outlined">BOOK</Button>
+            {/* <IconButton aria-label="add to favorites">
               <FavoriteIcon />
             </IconButton>
             <IconButton aria-label="share">
               <ShareIcon />
-            </IconButton>
+            </IconButton> */}
             <Button
               onClick={() => { console.log("clicked", pdata._id); navigate(`/user/product/${pdata._id}`)}}
               size="small"
               variant="outlined"
             >View Product</Button>
-            <ExpandMore
+            {/* <ExpandMore
               expand={expanded}
               onClick={handleExpandClick}
               aria-expanded={expanded}
               aria-label="show more"
             >
-              {/* <ExpandMoreIcon /> */}
-            </ExpandMore>
+              <ExpandMoreIcon />
+            </ExpandMore> */}
           </CardActions>
         </Card>
       ))}
