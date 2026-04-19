@@ -2,10 +2,17 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Box, Typography, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export default function ProductDetails() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
+  const navigate = useNavigate();
+
+  const bookproduct = () =>{
+    navigate(`/user/bookingform/${id}`);
+  }
+
   useEffect(() => {
     axios
       .get(`http://localhost:3000/product/getProductById/${id}`)
@@ -104,6 +111,7 @@ export default function ProductDetails() {
               Add to Cart
             </Button>
             <Button
+              onClick={bookproduct}
               variant="outlined"
               fullWidth
               sx={{ borderRadius: 2, textTransform: "none" }}

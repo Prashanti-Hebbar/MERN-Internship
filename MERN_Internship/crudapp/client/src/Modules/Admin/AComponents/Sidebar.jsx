@@ -30,6 +30,7 @@ const drawerWidth = 260
 const menuItems = [
   { text: "Dashboard", icon: <DashboardIcon />, path: "/admin/dashboard" },
   { text: "Users", icon: <PeopleIcon />, path: "/admin/users" },
+  { text: "Bookings", icon: <ShoppingCartIcon />, path: "/admin/bookings"}
 ]
 
 const productItems = [

@@ -17,178 +17,144 @@ export default function Bookingform() {
 
   const [price, setPrice] = useState(0);
 
+  const utoken = localStorage.getItem("UserToken");
+
+  // 🔥 handle input
   const handleChange = (e) => {
     if (e.target.name === "quantity") {
       const quantity = e.target.value;
-      setBooking({ ...booking, quantity, totalamount: (quantity * price)});
+      setBooking((prev) => ({
+        ...prev,
+        quantity,
+        totalamount: quantity * price,
+      }));
     } else {
-      setBooking({ ...booking, [e.target.name]: e.target.value });
-      console.log({ ...booking, [e.target.name]: e.target.value });
+      setBooking((prev) => ({
+        ...prev,
+        [e.target.name]: e.target.value,
+      }));
     }
   };
 
+  // 🔥 fetch user (PREFILL)
+  const fetchUser = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:3000/user/getprofile",
+        {
+          headers: { "auth-token": utoken },
+        }
+      );
+
+      const user = res.data.udata;
+
+      setBooking((prev) => ({
+        ...prev,
+        fname: user.name || "",
+        email: user.email || "",
+        phone: user.phone || "",
+        address: user.address || "",
+      }));
+    } catch (error) {
+      console.log("User fetch failed", error);
+    }
+  };
+
+  // 🔥 fetch product
+  const fetchProduct = async () => {
+    try {
+      const res = await axios.get(
+        `http://localhost:3000/product/getProductById/${productId}`
+      );
+
+      setPrice(res.data.product.price);
+    } catch (error) {
+      console.log("Product fetch failed", error);
+    }
+  };
+
+  // 🔥 RUN BOTH
   useEffect(() => {
-    axios
-      .get(`http://localhost:3000/product/getProductById/${productId}`)
-      .then((res) => {
-        console.log("product details", res.data.product.price);
-        setPrice(res.data.product.price);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    fetchUser();
+    fetchProduct();
   }, []);
 
-  const utoken = localStorage.getItem("UserToken");
-
+  // 🔥 submit
   const handleSubmit = async () => {
     try {
       await axios.post(
         "http://localhost:3000/booking/createbooking",
         { ...booking, productId },
-        { headers: { "auth-token": utoken } },
+        { headers: { "auth-token": utoken } }
       );
+
       alert("Booking successful!!");
     } catch (error) {
       console.log(error);
-      alert("Booking failed. Please try again.");
+      alert("Booking failed");
     }
   };
 
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        background: "linear-gradient(135deg, #cbd4f9, #644d7a)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        p: 2,
-      }}
-    >
-      <Box
-        sx={{
-          maxWidth: 500,
-          width: "100%",
-          p: 4,
-          borderRadius: 4,
-          backdropFilter: "blur(15px)",
-          background: "rgba(255,255,255,0.1)",
-          border: "1px solid rgba(255,255,255,0.2)",
-          boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
-        }}
-      >
-        {/* Title */}
-        <Typography
-          variant="h4"
-          sx={{
-            fontWeight: "bold",
-            color: "#fff",
-            textAlign: "center",
-            mb: 1,
-          }}
-        >
-          Complete your booking
+    <Box sx={{ minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
+      <Box sx={{ maxWidth: 500, width: "100%", p: 4 }}>
+
+        <Typography variant="h4" textAlign="center" mb={2}>
+          Booking Form
         </Typography>
 
-        <Typography
-          variant="body2"
-          sx={{
-            textAlign: "center",
-            color: "rgba(255,255,255,0.7)",
-            mb: 3,
-          }}
-        >
-          Fill your details to confirm your booking
-        </Typography>
-
-        {/* Form */}
         <Box display="flex" flexDirection="column" gap={2}>
+
           <TextField
             label="Full Name"
             name="fname"
-            fullWidth
-            variant="filled"
-            onChange={handleChange}
+            value={booking.fname}
+            InputProps={{ readOnly: true }}
           />
 
           <TextField
             label="Email"
             name="email"
-            fullWidth
-            variant="filled"
-            onChange={handleChange}
+            value={booking.email}
+            InputProps={{ readOnly: true }}
           />
 
           <TextField
-            type="number"
             label="Phone"
             name="phone"
-            fullWidth
-            variant="filled"
+            value={booking.phone}
             onChange={handleChange}
           />
 
           <TextField
             label="Address"
             name="address"
-            multiline
-            rows={3}
-            fullWidth
-            variant="filled"
+            value={booking.address}
             onChange={handleChange}
           />
 
           <TextField
-            type="number"
             label="Quantity"
             name="quantity"
-            fullWidth
-            variant="filled"
             onChange={handleChange}
           />
 
           <TextField
-            type="number"
             label="Price"
-            name="price"
-            fullWidth
-            InputProps={{ readOnly: true }}
-            variant="filled"
-            onChange={handleChange}
             value={price}
+            InputProps={{ readOnly: true }}
           />
 
           <TextField
-            type="number"
-            label="Total Amount"
-            name="totalamount"
-            fullWidth
-            InputProps={{ readOnly: true }}
-            variant="filled"
-            onChange={handleChange}
+            label="Total"
             value={booking.totalamount}
+            InputProps={{ readOnly: true }}
           />
 
-          <Button
-            variant="contained"
-            onClick={handleSubmit}
-            fullWidth
-            sx={{
-              mt: 2,
-              py: 1.5,
-              fontWeight: "bold",
-              borderRadius: 2,
-              background: "linear-gradient(90deg, #bcc6f4, #56416b)",
-              transition: "0.3s",
-              "&:hover": {
-                transform: "scale(1.03)",
-                boxShadow: "0 8px 20px rgba(0,0,0,0.3)",
-              },
-            }}
-          >
+          <Button variant="contained" onClick={handleSubmit}>
             Book Now
           </Button>
+
         </Box>
       </Box>
     </Box>
