@@ -64,4 +64,23 @@ const getCurrentUser = async (req, res) => {
   }
 };
 
-module.exports = { Createbooking, GetAllBookings, UpdateBookingStatus, getCurrentUser };
+const getUserBookings = async (req, res) => {
+  try {
+    const uid = req.userid;
+    const bookings = await Bookingtable.find({ userId: uid })
+      .populate("userId", "name email")
+      .populate("productId", "name price");
+    res.status(200).json({message: "User bookings fetched successfully", bdata: bookings });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error fetching user bookings", error});
+  }
+};
+
+module.exports = {
+  Createbooking,
+  GetAllBookings,
+  UpdateBookingStatus,
+  getUserBookings,
+  getCurrentUser,
+};

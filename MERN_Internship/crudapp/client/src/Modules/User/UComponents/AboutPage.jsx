@@ -55,7 +55,7 @@ export default function About() {
               borderRadius: 3,
               background: "linear-gradient(90deg, #6366f1, #ec4899)"
             }}
-            onClick={() => navigate("/user/homepage")}
+            onClick={() => navigate("/user")}
           >
             Explore Store
           </Button>
@@ -188,7 +188,7 @@ export default function About() {
               borderRadius: 3,
               background: "linear-gradient(90deg, #6366f1, #ec4899)"
             }}
-            onClick={() => navigate("/user/homepage")}
+            onClick={() => navigate("/user")}
           >
             Shop Now
           </Button>

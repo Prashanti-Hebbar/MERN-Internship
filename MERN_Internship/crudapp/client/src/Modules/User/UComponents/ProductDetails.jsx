@@ -1,17 +1,17 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Box, Typography, Button } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import {
+  Box,
+  Typography,
+  Button,
+  Divider,
+} from "@mui/material";
 
 export default function ProductDetails() {
   const { id } = useParams();
-  const [product, setProduct] = useState(null);
   const navigate = useNavigate();
-
-  const bookproduct = () =>{
-    navigate(`/user/bookingform/${id}`);
-  }
+  const [product, setProduct] = useState(null);
 
   useEffect(() => {
     axios
@@ -20,41 +20,42 @@ export default function ProductDetails() {
       .catch((err) => console.error(err));
   }, [id]);
 
-  if (!product) return <Typography>Loading...</Typography>;
+  if (!product) return <Typography p={4}>Loading...</Typography>;
 
   return (
-    <Box
-      sx={{ background: "#f8fafc", minHeight: "100vh", p: { xs: 2, md: 6 } }}
-    >
-      {/* 🔙 BACK BUTTON */}
-      <Button
-        onClick={() => window.history.back()}
-        sx={{ mb: 3, textTransform: "none" }}
-      >
-        ← Back{" "}
-      </Button>
-      {/* MAIN CONTAINER */}
+    <Box sx={{ background: "#fff", minHeight: "100vh" }}>
+      
+      {/* TOP BAR */}
+      <Box sx={{ px: { xs: 2, md: 6 }, py: 2 }}>
+        <Typography
+          sx={{
+            cursor: "pointer",
+            fontSize: 14,
+            color: "#6b7280",
+          }}
+          onClick={() => navigate(-1)}
+        >
+          ← Back
+        </Typography>
+      </Box>
+
+      {/* MAIN */}
       <Box
         sx={{
-          background: "#fff",
-          borderRadius: 4,
-          p: { xs: 2, md: 4 },
+          px: { xs: 2, md: 6 },
+          pb: 6,
           display: "grid",
-          gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
-          gap: 5,
-          border: "1px solid #e5e7eb",
+          gridTemplateColumns: { xs: "1fr", md: "1.2fr 1fr" },
+          gap: 6,
         }}
       >
-        {/* 🖼 IMAGE SECTION */}
-
+        {/* IMAGE */}
         <Box
           sx={{
-            background: "#f1f5f9",
+            border: "1px solid #e5e7eb",
             borderRadius: 3,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            p: 2,
+            p: 3,
+            background: "#fafafa",
           }}
         >
           <Box
@@ -63,58 +64,103 @@ export default function ProductDetails() {
             alt={product.name}
             sx={{
               width: "100%",
-              maxHeight: 400,
+              height: 420,
               objectFit: "contain",
-              borderRadius: 2,
             }}
           />
         </Box>
-        {/* 📄 DETAILS SECTION */}
-        <Box sx={{ display: "flex", flexDirection: "column" }}>
+
+        {/* DETAILS */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
           {/* TITLE */}
-          <Typography variant="h4" fontWeight={700} color="#0f172a">
-            {product.name}{" "}
+          <Typography fontSize={28} fontWeight={700}>
+            {product.name}
           </Typography>
-          {/* CATEGORY / META */}
-          <Typography sx={{ color: "#64748b", fontSize: 14, mt: 1 }}>
-            Product Category: {product.categoryId?.name}
+
+          <Typography
+            sx={{ mt: 1, color: "#6b7280", fontSize: 14 }}
+          >
+            Category: {product.categoryId?.name}
           </Typography>
+
           {/* PRICE */}
           <Typography
-            sx={{ mt: 3, fontSize: 26, fontWeight: 700, color: "#334155" }}
+            sx={{
+              mt: 3,
+              fontSize: 30,
+              fontWeight: 700,
+              color: "#111",
+            }}
           >
             ₹{product.price}
           </Typography>
+
+          <Divider sx={{ my: 3 }} />
+
           {/* DESCRIPTION */}
-          <Box mt={3}>
-            {" "}
+          <Box>
             <Typography fontWeight={600} mb={1}>
               Description
             </Typography>
-            <Typography color="#475569" lineHeight={1.6}>
+
+            <Typography
+              sx={{
+                color: "#4b5563",
+                lineHeight: 1.7,
+                fontSize: 15,
+              }}
+            >
               {product.description}
             </Typography>
           </Box>
-          {/* ACTIONS */}
-          <Box sx={{ mt: "auto", display: "flex", gap: 2, pt: 4 }}>
+
+          {/* ACTION PANEL */}
+          <Box
+            sx={{
+              mt: "auto",
+              pt: 4,
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+            }}
+          >
             <Button
               variant="contained"
               fullWidth
               sx={{
-                background: "#4f46e5",
+                height: 48,
                 borderRadius: 2,
                 textTransform: "none",
                 fontWeight: 600,
-                "&:hover": { background: "#4338ca" },
+                background: "#111",
+                "&:hover": {
+                  background: "#000",
+                },
               }}
             >
               Add to Cart
             </Button>
+
             <Button
-              onClick={bookproduct}
               variant="outlined"
               fullWidth
-              sx={{ borderRadius: 2, textTransform: "none" }}
+              onClick={() => navigate(`/user/bookingform/${id}`)}
+              sx={{
+                height: 48,
+                borderRadius: 2,
+                textTransform: "none",
+                fontWeight: 600,
+                borderColor: "#111",
+                color: "#111",
+                "&:hover": {
+                  background: "#f3f4f6",
+                },
+              }}
             >
               Buy Now
             </Button>

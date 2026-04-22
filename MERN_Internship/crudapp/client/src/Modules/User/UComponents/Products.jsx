@@ -20,7 +20,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
-import { Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const ExpandMore = styled((props) => {
@@ -88,7 +88,7 @@ export default function Products() {
       : products.filter((p) => p.categoryId === selectedcategory);
 
   return (
-    <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
+    <div style={{ display: "flex", flexWrap: "wrap", gap: "20px", justifyContent: "center", padding: "20px" }}>
       <FormControl fullWidth>
         <InputLabel>Category</InputLabel>
 
@@ -109,55 +109,88 @@ export default function Products() {
       </FormControl>
 
       {filteredproducts.map((pdata) => (
-        <Card key={pdata._id} sx={{ maxWidth: 345 }}>
-          <CardHeader
-            avatar={
-              <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                P
-              </Avatar>
-            }
-            action={
-              <IconButton aria-label="settings">
-                <MoreVertIcon />
-              </IconButton>
-            }
-            title={pdata.name}
-            subheader="September 14, 2016"
-          />
+        <Card
+          key={pdata._id}
+          sx={{
+            width: 320,
+            height: 350,
+            display: "flex",
+            flexDirection: "column",
+            borderRadius: 3,
+            border: "1px solid #e5e7eb",
+            overflow: "hidden",
+          }}
+        >
+          {/* IMAGE */}
           <CardMedia
             component="img"
-            height="194"
             image={`http://localhost:3000/uploads/${pdata.productimage}`}
             alt={pdata.name}
+            sx={{
+              height: 180, // ✅ FIXED (was 300 → breaking layout)
+              objectFit: "contain",
+            }}
           />
-          <CardContent>
-            <Typography variant="body2" sx={{ color: "text.secondary" }}>
+
+          {/* ✅ THIS WAS MISSING */}
+          <CardContent sx={{ flexGrow: 1 }}>
+            <Typography fontWeight={600} fontSize={15}>
+              {pdata.name}
+            </Typography>
+
+            <Typography
+              variant="body2"
+              sx={{
+                mt: 1,
+                color: "#6b7280",
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+              }}
+            >
               {pdata.description}
             </Typography>
           </CardContent>
-          <CardActions disableSpacing>
-            <Button 
-            onClick={() => { console.log("clicked", pdata._id); navigate(`/user/bookingform/${pdata._id}`)}}
-            size="small" variant="outlined">BOOK</Button>
-            {/* <IconButton aria-label="add to favorites">
-              <FavoriteIcon />
-            </IconButton>
-            <IconButton aria-label="share">
-              <ShareIcon />
-            </IconButton> */}
-            <Button
-              onClick={() => { console.log("clicked", pdata._id); navigate(`/user/product/${pdata._id}`)}}
-              size="small"
-              variant="outlined"
-            >View Product</Button>
-            {/* <ExpandMore
-              expand={expanded}
-              onClick={handleExpandClick}
-              aria-expanded={expanded}
-              aria-label="show more"
-            >
-              <ExpandMoreIcon />
-            </ExpandMore> */}
+
+          {/* ACTIONS */}
+          <CardActions
+            sx={{
+              mt: "auto",
+              px: 2,
+              pb: 2,
+            }}
+          >
+            <Box sx={{ display: "flex", width: "100%", gap: 1 }}>
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={() => navigate(`/user/bookingform/${pdata._id}`)}
+                sx={{
+                  height: 42,
+                  borderRadius: 2,
+                  textTransform: "none",
+                  fontWeight: 600,
+                  background: "#111",
+                }}
+              >
+                Buy
+              </Button>
+
+              <Button
+                fullWidth
+                variant="outlined"
+                onClick={() => navigate(`/user/product/${pdata._id}`)}
+                sx={{
+                  height: 42,
+                  borderRadius: 2,
+                  textTransform: "none",
+                  color: "#111",
+                }}
+              >
+                View
+              </Button>
+            </Box>
           </CardActions>
         </Card>
       ))}

@@ -48,7 +48,7 @@ export default function Sidebar() {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const [productOpen, setProductOpen] = useState(true)
+  const [productOpen, setProductOpen] = useState(false)
   const [categoryOpen, setCategoryOpen] = useState(false)
 
   const handleLogout = () => {

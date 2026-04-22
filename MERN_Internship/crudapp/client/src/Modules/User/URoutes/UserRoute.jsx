@@ -10,6 +10,7 @@ import Login from "../UComponents/Login";
 import ProductDetails from "../UComponents/ProductDetails";
 import MyProfile from "../UComponents/MyProfile";
 import Bookingform from "../UComponents/Bookingform";
+import TrackStatus from "../UComponents/TrackStatus";
 
 
 function AppContent() {
@@ -29,6 +30,7 @@ function AppContent() {
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/myprofile" element={<MyProfile />} />
         <Route path="/bookingform/:productId" element={<Bookingform />} />
+        <Route path="/trackstatus" element={<TrackStatus />} />
       </Routes>
     </div>
   );

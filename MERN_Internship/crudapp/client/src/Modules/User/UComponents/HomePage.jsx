@@ -2,16 +2,10 @@ import React, { useEffect, useState } from "react";
 import {
   Box,
   Typography,
-  Grid,
-  Paper,
-  Button,
   TextField,
   Chip,
-  Card,
-  CardMedia,
-  CardContent,
-  CardActions,
-  FormControl,
+  Container,
+  Button,
 } from "@mui/material";
 import axios from "axios";
 import Products from "./Products";
@@ -22,66 +16,96 @@ export default function HomePage() {
   const [cart, setCart] = useState([]);
 
   useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  const fetchProducts = () => {
     axios
       .get("http://localhost:3000/product/getProducts")
-      .then((res) => {
-        setProducts(res.data.products);
-      })
+      .then((res) => setProducts(res.data.products))
       .catch((err) => console.error(err));
-  };
-
-  const addToCart = (product) => {
-    setCart([...cart, product]);
-  };
-
-  const filteredProducts = products.filter((p) =>
-    p.name.toLowerCase().includes(search.toLowerCase()),
-  );
+  }, []);
 
   return (
-    <div>
-  <Box sx={{ p: 4, background: "#eef2f7", minHeight: "100vh" }}>
-    {/* 🔥 HEADER */}
-    <Box mb={4}>
-      <Typography variant="h5" fontWeight={700} color="#1e293b">
-        Shop Products
-      </Typography>
-      <Typography color="#64748b">
-        Browse and add products to your cart
-      </Typography>
-    </Box>
+    <Box sx={{ background: "#f1f5f9", minHeight: "100vh" }}>
 
-    {/* 🔍 SEARCH */}
-    <Box mb={4}>
-      <TextField
-        fullWidth
-        placeholder="Search products..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
+      {/* 🔥 HERO SECTION */}
+      <Box
         sx={{
-          background: "#fff",
-          borderRadius: 2,
-        }}
-      />
-    </Box>
-
-    {/* 🧾 CART */}
-    <Box mb={4}>
-      <Chip
-        label={`Cart: ${cart.length} items`}
-        sx={{
-          background: "#334155",
+          background: "linear-gradient(135deg, #4f46e5, #7c3aed)",
           color: "#fff",
-          fontWeight: 500,
+          py: 8,
+          px: 3,
+          textAlign: "center",
         }}
-      />
+      >
+        <Typography variant="h3" fontWeight={700}>
+          Discover Amazing Products
+        </Typography>
+
+        <Typography sx={{ mt: 2, opacity: 0.8 }}>
+          Shop smart. Book instantly. Experience better.
+        </Typography>
+
+        <TextField
+          placeholder="Search for products..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          sx={{
+            mt: 4,
+            width: "100%",
+            maxWidth: 500,
+            background: "#fff",
+            borderRadius: 2,
+          }}
+        />
+      </Box>
+
+      {/* 🔥 CONTENT */}
+      <Container maxWidth="lg" sx={{ mt: -6 }}>
+
+        {/* 🧾 CART + ACTION BAR */}
+        <Box
+          sx={{
+            background: "#fff",
+            p: 2,
+            borderRadius: 3,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            boxShadow: "0 10px 30px rgba(0,0,0,0.05)",
+            mb: 4,
+          }}
+        >
+          <Typography fontWeight={600}>
+            {products.length} Products Available
+          </Typography>
+
+          <Chip
+            label={`🛒 ${cart.length} items`}
+            sx={{
+              background: "#1e293b",
+              color: "#fff",
+              fontWeight: 600,
+            }}
+          />
+        </Box>
+
+        {/* 🧠 OPTIONAL FILTER TAGS */}
+        <Box sx={{ mb: 4, display: "flex", gap: 2, flexWrap: "wrap" }}>
+          {["All", "Popular", "New", "Trending"].map((tag) => (
+            <Chip
+              key={tag}
+              label={tag}
+              clickable
+              sx={{
+                background: "#e2e8f0",
+                "&:hover": { background: "#cbd5f5" },
+              }}
+            />
+          ))}
+        </Box>
+
+        {/* 🛍 PRODUCTS */}
+        <Products search={search} />
+
+      </Container>
     </Box>
-    <Products />
-  </Box>
-  </div>
-);
+  );
 }

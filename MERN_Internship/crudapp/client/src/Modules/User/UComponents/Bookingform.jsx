@@ -1,7 +1,7 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function Bookingform() {
   const { productId } = useParams();
@@ -14,6 +14,8 @@ export default function Bookingform() {
     quantity: "",
     totalamount: "",
   });
+
+  const navigate = useNavigate()
 
   const [price, setPrice] = useState(0);
 
@@ -89,6 +91,7 @@ export default function Bookingform() {
       );
 
       alert("Booking successful!!");
+      navigate(("/user/trackstatus"));
     } catch (error) {
       console.log(error);
       alert("Booking failed");
